@@ -1,9 +1,15 @@
-__author__ = 'User'
+#!/usr/bin/env python
+
+"""
+Learning english application
+"""
+
 from word.word import Word
 from dictionary.database import DataBase
 
 if __name__ == "__main__":
-    word = "relevant"
+    print __doc__
+    word = "name"
     dict_db = DataBase()
     tmp = dict_db.load()
     w1 = Word(value=word)
@@ -12,6 +18,6 @@ if __name__ == "__main__":
     dict_db.save(tmp)
     # w1.show_definition()
     w1.get_pronunciation()
-    #w1.pronounce()
+    w1.pronounce()
     tmp2 = dict_db.load()
     print tmp2[word]
