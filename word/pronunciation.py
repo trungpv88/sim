@@ -2,30 +2,42 @@ __author__ = 'User'
 import urllib
 import pygame
 import os.path
+from pydub import AudioSegment
 GG_SEARCH_URL = "https://ssl.gstatic.com/dictionary/static/sounds/de/0/"
+DICT_URL = "http://www.oxforddictionaries.com/definition/english/"
 # GG_TRANSLATE_URL = "http://translate.google.com/translate_tts?tl=en&q="
+MP3_EXTENSION = ".mp3"
+OGG_EXTENSION = ".ogg"
 AUDIO_DIR = "audio/"
 
 
 class Audio(object):
     """
-    Code for playing mp3 file using pygame based on: https://gist.github.com/juehan/1869090
+    Code for playing sound file using pygame based on: https://gist.github.com/juehan/1869090
 
     """
-    def __init__(self, mp3_file):
-        self.file = mp3_file
+    def __init__(self, audio_url, mp3_path, ogg_path):
+        self.audio_url = audio_url
+        self.mp3_path = mp3_path
+        self.ogg_path = ogg_path
 
     def save_file(self):
-        file_url = GG_SEARCH_URL + self.file
-        file_path = AUDIO_DIR + self.file
-        if not os.path.exists(file_path):
-            urllib.urlretrieve(file_url, file_path)
+        if not os.path.exists(self.ogg_path):
+            urllib.urlretrieve(self.audio_url, self.mp3_path)
 
-    def play_mp3(self, file_path):
+    def delete_mp3_file(self):
+        if os.path.exists(self.mp3_path):
+            os.remove(self.mp3_path)
+
+    def convert_mp3_to_ogg(self):
+        if os.path.exists(self.mp3_path):
+            mp3_file = AudioSegment.from_mp3(self.mp3_path)
+            mp3_file.export(self.ogg_path, format='ogg')
+
+    def play(self):
         pygame.init()
-        pygame.mixer.init()
         clock = pygame.time.Clock()
-        pygame.mixer.music.load(file_path)
+        pygame.mixer.music.load(self.ogg_path)
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             clock.tick(1000)

@@ -9,7 +9,7 @@ from dictionary.database import DataBase
 
 if __name__ == "__main__":
     print __doc__
-    word = "name"
+    word = "hi"
     dict_db = DataBase()
     tmp = dict_db.load()
     w1 = Word(value=word)
