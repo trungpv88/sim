@@ -5,7 +5,11 @@ from pronunciation import Audio, AUDIO_DIR, DICT_URL, MP3_EXTENSION, OGG_EXTENSI
 
 
 class Word(object):
+    """
+    A class to process a request word (definition and pronunciation)
+    """
     def __init__(self, value):
+        self.word = value
         self.def_url = DICT_URL + value
         self.parser = DefParser()
         self.audio = Audio(audio_url=GG_SEARCH_URL + value + MP3_EXTENSION,
@@ -13,19 +17,39 @@ class Word(object):
                            ogg_path=AUDIO_DIR + value + OGG_EXTENSION)
 
     def get_definition(self):
-        response = urllib2.urlopen(self.def_url)
-        self.parser.feed(response.read())
-        response.close()
+        """
+        Get the word definition from html source page
+        :return: word definition
+        """
+        try:
+            response = urllib2.urlopen(self.def_url)
+            self.parser.feed(response.read())
+            response.close()
+        except IOError:
+            print "Can not find the definition of '" + self.word + "' on the server."
+            return ""
         return self.parser.data
 
     def show_definition(self):
+        """
+        Print the word definition
+        :return:
+        """
         print self.parser.data
 
     def get_pronunciation(self):
-        self.audio.save_file()
+        """
+        Get the word pronunciation
+        :return:
+        """
+        self.audio.save_mp3_file()
         self.audio.convert_mp3_to_ogg()
         self.audio.delete_mp3_file()
 
     def pronounce(self):
+        """
+        Pronounce the word
+        :return:
+        """
         self.audio.init_mixer()
         self.audio.play()
