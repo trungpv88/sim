@@ -1,9 +1,7 @@
-from numpy.numarray.numerictypes import Object
-
-__author__ = 'User'
+__author__ = 'trungpv'
 import wx
-from ObjectListView import ObjectListView, ColumnDefn
 from word.word import Word
+from data_view import MainPanel, WordView
 
 
 class WindowManager(wx.Frame):
@@ -13,11 +11,10 @@ class WindowManager(wx.Frame):
     """
     def __init__(self, parent, title, word_list, dict_db):
         super(WindowManager, self).__init__(parent, title=title, size=(800, 600))
+        self.CenterOnScreen()
         self.word_list = word_list
         self.dict_db = dict_db
-        self.CenterOnScreen()
-        self.panel = MainPanel(self)
-        self.panel.load_data(self.word_list)
+        self.panel = MainPanel(self, self.word_list)
         self.num_word = len(self.word_list)
         self.basic_gui()
 
@@ -52,71 +49,34 @@ class WindowManager(wx.Frame):
         print ''
 
     def quit(self, e):
+        """
+        Event raises when quit menu bar button is clicked
+        :param e:
+        :return:
+        """
         yes_no_box = wx.MessageDialog(None, 'Are you sure you want to quit this application?', 'Sim',  wx.YES_NO)
         if yes_no_box.ShowModal() == wx.ID_YES:
             self.Close()
 
     def add_word(self, e):
+        """
+        Event raises when add word button is clicked
+        :param e:
+        :return:
+        """
         name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
         if name_box.ShowModal() == wx.ID_OK:
             new_word = name_box.GetValue()
-            w = Word(value=new_word)
-            if new_word not in self.word_list.keys():
+            # check whether new word exists or is blank
+            if new_word not in self.word_list.keys() and new_word != "":
+                w = Word(value=new_word)
                 word_def = w.get_definition()
                 if word_def is not "":
                     self.word_list[new_word] = word_def
+                    # save new word to database
                     self.dict_db.save(self.word_list)
                     self.num_word += 1
-                    self.panel.update_data([{'id': self.num_word, 'value': new_word, 'definition': word_def}])
-            w.get_pronunciation()
-
-
-class WordView(object):
-    def __init__(self, id, value, definition):
-        self.id = id
-        self.value = value
-        self.definition = definition
-
-
-class MainPanel(wx.Panel):
-    """
-    http://www.blog.pythonlibrary.org/2009/12/23/wxpython-using-objectlistview-instead-of-a-listctrl/
-    """
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-        self.words = []
-        self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
-        self.set_columns()
-
-        self.dataOlv.cellEditMode = ObjectListView.CELLEDIT_SINGLECLICK
-
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
-        main_sizer.Add(self.dataOlv, 1, wx.ALL | wx.EXPAND, 5)
-        self.SetSizer(main_sizer)
-
-    def convert_to_word_obj(self, word_list):
-        word_obj = []
-        word_id = 1
-        for k, v in word_list.items():
-            tmp_obj = {}
-            tmp_obj['id'] = word_id
-            tmp_obj['value'] = k
-            tmp_obj['definition'] = v.split('\n')[0]
-            word_obj.append(tmp_obj)
-            word_id += 1
-        return word_obj
-
-    def load_data(self, word_list):
-        self.words += self.convert_to_word_obj(word_list)
-        self.dataOlv.SetObjects(self.words)
-
-    def update_data(self, new_word):
-        self.dataOlv.SetObjects(self.words + new_word)
-
-    def set_columns(self, data=None):
-        self.dataOlv.SetColumns([
-            ColumnDefn('No', 'center', 50, 'id'),
-            ColumnDefn('Word', 'left', 100, 'value'),
-            ColumnDefn('Definition', 'left', 700, 'definition')
-        ])
-        self.dataOlv.SetObjects(self.words)
+                    # display new word on overlay
+                    self.panel.add_new_data(WordView(self.num_word, new_word, word_def))
+                # get new word pronunciation
+                w.get_pronunciation()
