@@ -1,5 +1,6 @@
 __author__ = 'User'
 import urllib2
+import wx
 from definition import DefParser
 from pronunciation import Audio, AUDIO_DIR, DICT_URL, MP3_EXTENSION, OGG_EXTENSION, GG_SEARCH_URL
 
@@ -26,7 +27,9 @@ class Word(object):
             self.parser.feed(response.read())
             response.close()
         except IOError:
-            print "Can not find the definition of '" + self.word + "' on the server."
+            msg_dlg = wx.MessageDialog(None, "Can not find the definition of '" + self.word + "' on the server.", 'Sim',
+                                       style=wx.OK | wx.ICON_EXCLAMATION)
+            msg_dlg.ShowModal()
             return ""
         return self.parser.data
 

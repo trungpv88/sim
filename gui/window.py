@@ -1,6 +1,6 @@
 __author__ = 'trungpv'
 import wx
-import  wx.calendar
+import wx.calendar
 from word.word import Word
 from data_view import MainPanel, WordView
 
@@ -11,7 +11,8 @@ class WindowManager(wx.Frame):
     https://www.youtube.com/channel/UCfzlCWGWYyIQ0aLC5w48gBQ
     """
     def __init__(self, parent, title, word_list, dict_db):
-        super(WindowManager, self).__init__(parent, title=title, size=(800, 600))
+        super(WindowManager, self).__init__(parent, title=title, size=(800, 600),
+                                            style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
         self.CenterOnScreen()
         self.panel = MainPanel(self, word_list, dict_db)
         self.basic_gui()
@@ -28,13 +29,32 @@ class WindowManager(wx.Frame):
         file_btn = wx.Menu()
         help_btn = wx.Menu()
 
-        exit_item = wx.MenuItem(file_btn, wx.ID_EXIT, 'Exit', '...')
+        new_item = wx.MenuItem(file_btn, wx.ID_NEW, 'New...')
+        new_item.SetBitmap(wx.Bitmap('icon/new_db.ico'))
+        file_btn.AppendItem(new_item)
+        self.Bind(wx.EVT_MENU, self.new, new_item)
+        open_item = wx.MenuItem(file_btn, wx.ID_OPEN, 'Open...')
+        open_item.SetBitmap(wx.Bitmap('icon/load_db.ico'))
+        file_btn.AppendItem(open_item)
+        self.Bind(wx.EVT_MENU, self.open, open_item)
+        save_item = wx.MenuItem(file_btn, wx.ID_SAVE, 'Save...')
+        save_item.SetBitmap(wx.Bitmap('icon/save_db.ico'))
+        file_btn.AppendItem(save_item)
+        self.Bind(wx.EVT_MENU, self.save, save_item)
+        save_as_item = wx.MenuItem(file_btn, wx.ID_SAVEAS, 'Save As...')
+        save_as_item.SetBitmap(wx.Bitmap('icon/save_as_db.ico'))
+        file_btn.AppendItem(save_as_item)
+        self.Bind(wx.EVT_MENU, self.save_as, save_as_item)
+        exit_item = wx.MenuItem(file_btn, wx.ID_EXIT, 'Exit')
+        exit_item.SetBitmap(wx.Bitmap('icon/exit.ico'))
         file_btn.AppendItem(exit_item)
         self.Bind(wx.EVT_MENU, self.quit, exit_item)
-        about_item = wx.MenuItem(help_btn, wx.ID_ABOUT, 'About', '...')
+        about_item = wx.MenuItem(help_btn, wx.ID_ABOUT, 'About')
+        about_item.SetBitmap(wx.Bitmap('icon/about.png'))
         help_btn.AppendItem(about_item)
         self.Bind(wx.EVT_MENU, self.about, about_item)
-        guide_item = wx.MenuItem(help_btn, wx.ID_HELP, 'Help Topic', '...')
+        guide_item = wx.MenuItem(help_btn, wx.ID_HELP, 'Help Topic')
+        guide_item.SetBitmap(wx.Bitmap('icon/help.ico'))
         help_btn.AppendItem(guide_item)
         self.Bind(wx.EVT_MENU, self.guide, guide_item)
 
@@ -69,6 +89,18 @@ class WindowManager(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.configure_server, setting_tool_btn)
 
     def tool_strip_design(self):
+        print ''
+
+    def new(self, e):
+        print ''
+
+    def open(self, e):
+        print ''
+
+    def save(self, e):
+        print ''
+
+    def save_as(self, e):
         print ''
 
     def quit(self, e):

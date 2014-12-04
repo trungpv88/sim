@@ -1,5 +1,6 @@
 __author__ = 'User'
 import urllib
+import wx
 import pygame
 import os.path
 from pydub import AudioSegment
@@ -54,7 +55,9 @@ class Audio(object):
                 mp3_file = AudioSegment.from_mp3(self.mp3_path)
                 mp3_file.export(self.ogg_path, format='ogg')
         except:
-            print "Can not find the audio file on the server."
+            msg_dlg = wx.MessageDialog(None, 'Can not find the audio file on the server.', 'Sim',
+                                       style=wx.OK | wx.ICON_EXCLAMATION)
+            msg_dlg.ShowModal()
 
     def play(self):
         """
