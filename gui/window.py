@@ -1,7 +1,6 @@
 __author__ = 'trungpv'
 import wx
 import wx.calendar
-from word.word import Word
 from data_view import MainPanel, WordView
 
 
@@ -13,46 +12,61 @@ class WindowManager(wx.Frame):
     def __init__(self, parent, title, word_list, dict_db):
         super(WindowManager, self).__init__(parent, title=title, size=(800, 600),
                                             style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
+        self.SetIcon(wx.Icon('icon/app-logo.ico'))
         self.CenterOnScreen()
         self.panel = MainPanel(self, word_list, dict_db)
         self.basic_gui()
 
     def basic_gui(self):
+        """
+        GUI design for main screen
+        :return:
+        """
         self.menu_design()
         self.tool_bar_design()
         self.tool_strip_design()
         self.Show(True)
 
     def menu_design(self):
+        """
+        Design buttons on menu bar
+        :return:
+        """
         menu_bar = wx.MenuBar()
-
         file_btn = wx.Menu()
         help_btn = wx.Menu()
 
+        # 'New' menu button
         new_item = wx.MenuItem(file_btn, wx.ID_NEW, 'New...')
         new_item.SetBitmap(wx.Bitmap('icon/new_db.ico'))
         file_btn.AppendItem(new_item)
         self.Bind(wx.EVT_MENU, self.new, new_item)
+        # 'Open' menu button
         open_item = wx.MenuItem(file_btn, wx.ID_OPEN, 'Open...')
         open_item.SetBitmap(wx.Bitmap('icon/load_db.ico'))
         file_btn.AppendItem(open_item)
         self.Bind(wx.EVT_MENU, self.open, open_item)
+        # 'Save' menu button
         save_item = wx.MenuItem(file_btn, wx.ID_SAVE, 'Save...')
         save_item.SetBitmap(wx.Bitmap('icon/save_db.ico'))
         file_btn.AppendItem(save_item)
         self.Bind(wx.EVT_MENU, self.save, save_item)
+        # 'Save As' menu button
         save_as_item = wx.MenuItem(file_btn, wx.ID_SAVEAS, 'Save As...')
         save_as_item.SetBitmap(wx.Bitmap('icon/save_as_db.ico'))
         file_btn.AppendItem(save_as_item)
         self.Bind(wx.EVT_MENU, self.save_as, save_as_item)
+        # 'Exit' menu button
         exit_item = wx.MenuItem(file_btn, wx.ID_EXIT, 'Exit')
         exit_item.SetBitmap(wx.Bitmap('icon/exit.ico'))
         file_btn.AppendItem(exit_item)
         self.Bind(wx.EVT_MENU, self.quit, exit_item)
+        # 'About' menu button
         about_item = wx.MenuItem(help_btn, wx.ID_ABOUT, 'About')
         about_item.SetBitmap(wx.Bitmap('icon/about.png'))
         help_btn.AppendItem(about_item)
         self.Bind(wx.EVT_MENU, self.about, about_item)
+        # 'Help' menu button
         guide_item = wx.MenuItem(help_btn, wx.ID_HELP, 'Help Topic')
         guide_item.SetBitmap(wx.Bitmap('icon/help.ico'))
         help_btn.AppendItem(guide_item)
@@ -60,13 +74,16 @@ class WindowManager(wx.Frame):
 
         menu_bar.Append(file_btn, '&File')
         menu_bar.Append(help_btn, '&Help')
-
         self.SetMenuBar(menu_bar)
 
     def tool_bar_design(self):
+        """
+        Design buttons on tool bar
+        :return:
+        """
         tool_bar = self.CreateToolBar()
         add_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Add', wx.Bitmap('icon/add_word.ico'), shortHelp='Add new word')
-        play_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Play',wx.Bitmap('icon/play_pronunciation.ico'),
+        play_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Play', wx.Bitmap('icon/play_pronunciation.ico'),
                                               shortHelp='Play word pronunciation')
         define_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Definition', wx.Bitmap('icon/view_definition.ico'),
                                                 shortHelp='View word definitions')
@@ -78,9 +95,8 @@ class WindowManager(wx.Frame):
                                               shortHelp='Test your vocabulary')
         setting_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Setting', wx.Bitmap('icon/setting.ico'),
                                                  shortHelp='Configure servers')
-
         tool_bar.Realize()
-        self.Bind(wx.EVT_TOOL, self.add_word, add_tool_btn)
+        self.Bind(wx.EVT_TOOL, self.panel.add_word, add_tool_btn)
         self.Bind(wx.EVT_TOOL, self.panel.play_pronunciation, play_tool_btn)
         self.Bind(wx.EVT_TOOL, self.panel.view_definition, define_tool_btn)
         self.Bind(wx.EVT_TOOL, self.change_language, language_tool_btn)
@@ -142,17 +158,6 @@ class WindowManager(wx.Frame):
 
     def guide(self, e):
         print 'help'
-
-    def add_word(self, e):
-        """
-        Event raises when add word button is clicked
-        :param e:
-        :return:
-        """
-        name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
-        if name_box.ShowModal() == wx.ID_OK:
-            new_word = name_box.GetValue()
-            self.panel.add_new_data(new_word)
 
     def change_language(self, e):
         choose_language = wx.SingleChoiceDialog(None, 'Choose your learning language:', 'Language',

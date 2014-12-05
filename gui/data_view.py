@@ -32,7 +32,7 @@ class MainPanel(wx.Panel):
         self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.sound = self.dataOlv.AddNamedImages('user', wx.Bitmap('icon/sound.ico'))
         self.set_columns()
-        self.dataOlv.cellEditMode = ObjectListView.CELLEDIT_SINGLECLICK
+        # self.dataOlv.cellEditMode = ObjectListView.CELLEDIT_SINGLECLICK
         # data overlay design
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.dataOlv, 1, wx.ALL | wx.EXPAND, 5)
@@ -87,7 +87,7 @@ class MainPanel(wx.Panel):
             self.words.append(tmp_obj)
             word_id += 1
 
-    def load_data(self, ):
+    def load_data(self):
         """
         Load data from database to display on overlay
         :param word_list:
@@ -147,6 +147,17 @@ class MainPanel(wx.Panel):
         ])
 
         self.dataOlv.SetObjects(self.words)
+
+    def add_word(self, e):
+        """
+        Event raises when add word button is clicked
+        :param e:
+        :return:
+        """
+        name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
+        if name_box.ShowModal() == wx.ID_OK:
+            new_word = name_box.GetValue()
+            self.add_new_data(new_word)
 
     def play_pronunciation(self, e):
         """
