@@ -3,6 +3,7 @@ from ObjectListView import ObjectListView, ColumnDefn
 from word.word import Word
 import os.path
 import wx
+from dictionary.database import DataBase
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 
 
@@ -22,79 +23,51 @@ class MainPanel(wx.Panel):
     """
     def __init__(self, parent, word_list, dict_db):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-        self.word_list = word_list
-        self.word_list_view = {}
-        self.normalize_word_list(word_list)
+        # get word data
+        self.saved_words = word_list
         self.dict_db = dict_db
-        self.num_word = len(self.word_list)
-        self.words = []
-        # data overlay in list view
+        self.num_word = len(self.saved_words)
+        self.view_words = []
+        # display words on overlay
         self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.sound = self.dataOlv.AddNamedImages('user', wx.Bitmap('icon/sound.ico'))
         self.set_columns()
-        # self.dataOlv.cellEditMode = ObjectListView.CELLEDIT_SINGLECLICK
-        # data overlay design
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.dataOlv, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(main_sizer)
-        # load data to overlay
-        self.load_data()
+        self.view_data()
 
     @staticmethod
-    def normalize_def_lines(lines):
-        lines = lines.split('\n')
-        normal_lines = []
-        line_num = 1
-        for line in lines:
-            if line is not '':
-                normal_line = line.replace(':', '.')  # replace last character from ':' to '.'
-                # upper first character and insert space at the beginning of line
-                if normal_line[0] is not ' ':
-                    normal_line = ' ' + normal_line[0].upper() + normal_line[1:]
-                else:
-                    normal_line = normal_line[0] + normal_line[1].upper() + normal_line[2:]
-                # insert definition number at beginning of line
-                normal_line = str(line_num) + '.' + normal_line
-                normal_lines.append(normal_line)
-                line_num += 1
-        return normal_lines
-
-    def normalize_word_list(self, word_list):
+    def normalize_view_def(word):
         """
-        Normalize content of word list.
-        For example: {'hello': ['1. Hi', '2. Say in meeting']}
-        :param word_list:
+        Take the first definition of word to display on overlay
+        :param word:
         :return:
         """
-        for k, v in word_list.items():
-            self.word_list_view[k] = self.normalize_def_lines(v)
-
-    @staticmethod
-    def normalize_def_line(word):
         word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
         word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
         return word_view
 
-    def dict_to_word_obj(self):
+    def saved_to_view_words(self):
         """
-        Convert from dictionary to WordView object
-        :param word_list:dictionary
+        Convert from saved words (taken from database under dictionary type) to view words
+        :param:dictionary
         :return:
         """
         word_id = 1
-        for k, v in self.word_list_view.items():
-            tmp_obj = WordView(word_id, k, self.normalize_def_line(v))
-            self.words.append(tmp_obj)
+        for k, v in self.saved_words.items():
+            tmp_obj = WordView(word_id, k, self.normalize_view_def(v))
+            self.view_words.append(tmp_obj)
             word_id += 1
 
-    def load_data(self):
+    def view_data(self):
         """
-        Load data from database to display on overlay
+        Display word definition on overlay
         :param word_list:
         :return:
         """
-        self.dict_to_word_obj()
-        self.dataOlv.SetObjects(self.words)
+        self.saved_to_view_words()
+        self.dataOlv.SetObjects(self.view_words)
 
     def add_new_data(self, new_word):
         """
@@ -102,31 +75,31 @@ class MainPanel(wx.Panel):
         :param new_word:
         :return:
         """
-        # check whether new word exists or is blank
         progress_max = 100
         progress_dlg = wx.ProgressDialog('Connecting to servers...', 'Time remaining', progress_max,
                                          style=wx.PD_ELAPSED_TIME | wx.PD_REMAINING_TIME | wx.PD_AUTO_HIDE)
         progress_dlg.Update(0)
         w = Word(value=new_word)
-        if new_word not in self.word_list.keys() and new_word != "":
+        # check whether new word exists or is blank
+        if new_word not in self.saved_words.keys() and new_word != "":
+            # first step: take definition from server
             word_def = w.get_definition()
             progress_dlg.Update(30)
             if word_def is not '':
-                self.word_list[new_word] = word_def
-                # save new word to database
-                self.dict_db.save(self.word_list)
-                progress_dlg.Update(50)
+                # second step: save definition to database and get it to display on overlay
                 self.num_word += 1
-                word_def_lines = self.normalize_def_lines(word_def)
-                word_def_line = self.normalize_def_line(word_def_lines)
-                self.words.append(WordView(self.num_word, new_word, word_def_line))
-                self.word_list_view[new_word] = word_def_lines
-                # display new word on overlay
-                self.dataOlv.SetObjects(self.words)
-                progress_dlg.Update(70)
-        # get new word pronunciation
+                saved_def = DataBase.normalize_saved_def(word_def)
+                view_def = self.normalize_view_def(saved_def)
+                self.saved_words[new_word] = saved_def
+                self.dict_db.save(self.saved_words)
+                progress_dlg.Update(60)
+                # third step: display definition on overlay
+                self.view_words.append(WordView(self.num_word, new_word, view_def))
+                self.dataOlv.SetObjects(self.view_words)
+                progress_dlg.Update(80)
+        # final step: get word pronunciation from server and update 'sound' icon on overlay
         w.get_pronunciation()
-        self.set_columns()  # update sound column
+        self.set_columns()  # update 'sound' icon for new word displayed on overlay
         progress_dlg.Update(100)
         progress_dlg.Destroy()
 
@@ -146,7 +119,7 @@ class MainPanel(wx.Panel):
             ColumnDefn('', 'center', 20, 'music', imageGetter=image_getter)
         ])
 
-        self.dataOlv.SetObjects(self.words)
+        self.dataOlv.SetObjects(self.view_words)
 
     def add_word(self, e):
         """
@@ -179,7 +152,7 @@ class MainPanel(wx.Panel):
         word_def = ""
         for obj in selected_obj:
             word_def += obj.value.upper() + '\n'
-            for line in self.word_list_view[obj.value]:
+            for line in self.saved_words[obj.value]:
                 word_def += line.decode('utf-8') + '\n'
             word_def += '-------------------------------------------\n'
         msg_box = wx.MessageDialog(None, word_def, 'Word Definition', style=wx.OK | wx.ICON_INFORMATION)
