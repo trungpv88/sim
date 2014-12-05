@@ -3,7 +3,7 @@ from ObjectListView import ObjectListView, ColumnDefn
 from word.word import Word
 import os.path
 import wx
-from dictionary.database import DataBase
+from dictionary.database import DataBase, LogDB
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 
 
@@ -11,23 +11,26 @@ class WordView(object):
     """
     A class for displaying word data
     """
-    def __init__(self, w_id, w_value, w_definition):
+    def __init__(self, w_id, w_value, w_definition, w_date):
         self.id = w_id
         self.value = w_value
         self.definition = w_definition
+        self.date = w_date
 
 
 class MainPanel(wx.Panel):
     """
     http://www.blog.pythonlibrary.org/2009/12/23/wxpython-using-objectlistview-instead-of-a-listctrl/
     """
-    def __init__(self, parent, word_list, dict_db):
+    def __init__(self, parent):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         # get word data
-        self.saved_words = word_list
-        self.dict_db = dict_db
+        self.dict_db = DataBase()
+        self.saved_words = self.dict_db.load()
         self.num_word = len(self.saved_words)
         self.view_words = []
+        self.log_db = LogDB()
+        self.log = self.log_db.load()
         # display words on overlay
         self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.sound = self.dataOlv.AddNamedImages('user', wx.Bitmap('icon/sound.ico'))
@@ -56,7 +59,7 @@ class MainPanel(wx.Panel):
         """
         word_id = 1
         for k, v in self.saved_words.items():
-            tmp_obj = WordView(word_id, k, self.normalize_view_def(v))
+            tmp_obj = WordView(word_id, k, self.normalize_view_def(v), self.log.get(k, ' ')[0])
             self.view_words.append(tmp_obj)
             word_id += 1
 
@@ -82,22 +85,29 @@ class MainPanel(wx.Panel):
         w = Word(value=new_word)
         # check whether new word exists or is blank
         if new_word not in self.saved_words.keys() and new_word != "":
-            # first step: take definition from server
+            # take definition from server
             word_def = w.get_definition()
             progress_dlg.Update(30)
             if word_def is not '':
-                # second step: save definition to database and get it to display on overlay
+                # save definition to database and get it to display on overlay
                 self.num_word += 1
+                now = wx.DateTime.Now()
+                today = now.Format("%Y-%m-%d")
                 saved_def = DataBase.normalize_saved_def(word_def)
                 view_def = self.normalize_view_def(saved_def)
                 self.saved_words[new_word] = saved_def
                 self.dict_db.save(self.saved_words)
                 progress_dlg.Update(60)
-                # third step: display definition on overlay
-                self.view_words.append(WordView(self.num_word, new_word, view_def))
+                # display definition on overlay
+                self.view_words.append(WordView(self.num_word, new_word, view_def, today))
                 self.dataOlv.SetObjects(self.view_words)
+                progress_dlg.Update(70)
+                # save date to log file
+                self.log[new_word] = []
+                self.log[new_word].append(today)
+                self.log_db.save(self.log)
                 progress_dlg.Update(80)
-        # final step: get word pronunciation from server and update 'sound' icon on overlay
+        # get word pronunciation from server and update 'sound' icon on overlay
         w.get_pronunciation()
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
         progress_dlg.Update(100)
@@ -114,8 +124,10 @@ class MainPanel(wx.Panel):
 
         self.dataOlv.SetColumns([
             ColumnDefn('No', 'center', 50, 'id'),
-            ColumnDefn('Word', 'left', 100, 'value'),
+            ColumnDefn('Word', 'left', 50, 'value'),
             ColumnDefn('Definition', 'left', 550, 'definition'),
+            # ColumnDefn('Date', 'left', 100, 'date', stringConverter="%d-%b-%Y"),
+            ColumnDefn('Date', 'left', 100, 'date'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=image_getter)
         ])
 

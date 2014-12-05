@@ -10,12 +10,12 @@ class WindowManager(wx.Frame):
     Some code for controls based on the wxPython video tutorial of Sentdex:
     https://www.youtube.com/channel/UCfzlCWGWYyIQ0aLC5w48gBQ
     """
-    def __init__(self, parent, title, word_list, dict_db):
+    def __init__(self, parent, title):
         super(WindowManager, self).__init__(parent, title=title, size=(800, 600),
                                             style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
         self.SetIcon(wx.Icon('icon/app-logo.ico'))
         self.CenterOnScreen()
-        self.panel = MainPanel(self, word_list, dict_db)
+        self.panel = MainPanel(self)
         self.tool_bar = ToolBar(self)
         self.menu_bar = MenuBar(self)
         self.basic_gui()

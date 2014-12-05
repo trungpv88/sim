@@ -2,9 +2,34 @@ __author__ = 'User'
 import pickle
 import os
 DB_PATH = "db.pkl"
+LOG_PATH = 'log.pkl'
 
 
-class DataBase(object):
+class BaseModel(object):
+    def __init__(self, path):
+        self.path = path
+
+    def save(self, obj=dict()):
+        """
+        Save data under dictionary type to database
+        :param obj:
+        :return:
+        """
+        with open(self.path, 'wb') as f:
+            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+    def load(self):
+        """
+        Load data from database under dictionary type
+        :return:
+        """
+        if not os.path.exists(self.path):
+            self.save()
+        with open(self.path, 'rb') as f:
+            return pickle.load(f)
+
+
+class DataBase(BaseModel):
     """
     Words are saved in database under dictionary type.
     The keys are words and the values are their definitions under list type.
@@ -12,27 +37,8 @@ class DataBase(object):
     {'hello':['1. def1', '2. def2'], 'world':['1. w1', '2. w2']}
     """
     def __init__(self):
+        super(DataBase, self).__init__(DB_PATH)
         self.name = None
-
-    @staticmethod
-    def save(obj=dict()):
-        """
-        Save data under dictionary type to database
-        :param obj:
-        :return:
-        """
-        with open(DB_PATH, 'wb') as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-
-    def load(self):
-        """
-        Load words from database under dictionary type
-        :return:
-        """
-        if not os.path.exists(DB_PATH):
-            self.save()
-        with open(DB_PATH, 'rb') as f:
-            return pickle.load(f)
 
     @staticmethod
     def normalize_saved_def(lines):
@@ -58,3 +64,11 @@ class DataBase(object):
                 normal_lines.append(normal_line)
                 line_num += 1
         return normal_lines
+
+
+class LogDB(BaseModel):
+    def __init__(self):
+        super(LogDB, self).__init__(LOG_PATH)
+
+    
+
