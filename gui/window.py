@@ -13,7 +13,7 @@ class WindowManager(wx.Frame):
     def __init__(self, parent, title):
         super(WindowManager, self).__init__(parent, title=title, size=(800, 600),
                                             style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
-        self.SetIcon(wx.Icon('icon/app-logo.ico'))
+        # self.SetIcon(wx.Icon('icon/app-logo.ico'))
         self.CenterOnScreen()
         self.panel = MainPanel(self)
         self.tool_bar = ToolBar(self)

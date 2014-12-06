@@ -37,14 +37,14 @@ class CalendarDialog(wx.Dialog):
         self.log_db = LogDB()
         self.log = self.log_db.load()
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title)
-        self.calendar = wx.calendar.CalendarCtrl(self, wx.ID_ANY, wx.DateTime_Now(),
-                                                 style=wx.calendar.CAL_MONDAY_FIRST|wx.calendar.CAL_SHOW_HOLIDAYS)
-        # panel = wx.Panel(self, wx.ID_ANY)
-
+        today = wx.DateTime_Now()
+        self.calendar = wx.calendar.CalendarCtrl(self, wx.ID_ANY, today, style=wx.calendar.CAL_MONDAY_FIRST)
+        self.show_learnt_date(today.GetMonth() + 1, today.GetYear())
         box_sizer = wx.BoxSizer(wx.VERTICAL)
         box_sizer.Add(self.calendar, 0, wx.EXPAND | wx.ALL, border=0)
         self.calendar.Bind(wx.calendar.EVT_CALENDAR_DAY, self.on_date_selected)
-        self.calendar.Bind(wx.calendar.EVT_CALENDAR_PAGE_CHANGED, self.on_month_changed)
+        self.calendar.Bind(wx.calendar.EVT_CALENDAR_MONTH, self.on_month_changed)
+        self.calendar.Bind(wx.calendar.EVT_CALENDAR_YEAR, self.on_month_changed)
         self.label = wx.StaticText(self, wx.ID_ANY, '')
         box_sizer.Add(self.label, 0, wx.EXPAND | wx.ALL, border=20)
         self.SetSizerAndFit(box_sizer)
@@ -55,7 +55,7 @@ class CalendarDialog(wx.Dialog):
         day = date.GetDay()
         month = date.GetMonth() + 1
         year = date.GetYear()
-        date_str = "%02d-%02d-%02d" % (year, month, day,)
+        date_str = "%02d-%02d-%02d" % (year, month, day)
         learnt_words = ""
         for k, v in self.log.items():
             if v[0] == date_str:
@@ -63,26 +63,19 @@ class CalendarDialog(wx.Dialog):
         self.label.SetLabel(learnt_words)
 
     def on_month_changed(self, e):
+        for i in xrange(1, 31, 1):
+            self.calendar.ResetAttr(i)
         date = self.calendar.GetDate()
-        # wx.calendar.CalendarDateAttr.SetHoliday(holiday=True)
-        att = wx.calendar.CalendarDateAttr(border=wx.calendar.CAL_BORDER_SQUARE, colBorder=wx.BLUE,
-                                            colText=wx.RED, colBack=wx.YELLOW)
-        # att.SetHoliday(holiday=True)
-        # date.SetAttr(attr)
-        # attr.SetHoliday(True)
-        self.calendar.SetAttr(day=23, attr=att)
-        # self.calendar.SetHeaderColours(colBg=wx.Colour(255, 255, 0), colFg=wx.Colour(255, 0, 255))
-        # self.calendar.SetHighlightColours(colBg=wx.Colour(255, 255, 0), colFg=wx.Colour(255, 0, 255))
-        # self.calendar.SetHoliday(19)
-        # attr_date = self.calendar.GetAttr(14)
-        # print attr_date
-        # print attr.BackgroundColour
-        # self.calendar.EnableHolidayDisplay(display=True)
-        # if date.GetMonth() == 11:
-        #     self.calendar.SetHoliday(5)
-        #     self.calendar.SetHolidayColours(colBg=wx.Colour(255, 255, 0), colFg=wx.Colour(255, 0, 255))
-        #     self.calendar.HolidayColourBg = wx.Colour(255, 255, 0)
-        #     print self.calendar.HolidayColourBg
-        #     print self.calendar.HolidayColourFg
-        #     print wx.Colour(255, 255, 0)
-        #     self.calendar.EnableHolidayDisplay(display=True)
+        self.show_learnt_date(date.GetMonth() + 1, date.GetYear())
+
+    def show_learnt_date(self, month, year):
+        month_year = "%02d-%02d" % (year, month,)
+        days = {}
+        for k, v in self.log.items():
+            if v[0][:7] == month_year:
+                days[v[0][9]] = ''
+        for k in days.iterkeys():
+            highlight = wx.calendar.CalendarDateAttr(border=wx.calendar.CAL_BORDER_SQUARE,
+                                                     colBorder=wx.Colour(255, 255, 255),
+                                                     colText=wx.Colour(255, 0, 0), colBack=wx.Colour(0, 255, 0))
+            self.calendar.SetAttr(day=int(k), attr=highlight)
