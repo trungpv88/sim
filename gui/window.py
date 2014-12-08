@@ -3,6 +3,7 @@ import wx
 from data_view import MainPanel
 from tool_bar import ToolBar
 from menu_bar import MenuBar
+from status_bar import StatusBar
 
 
 class WindowManager(wx.Frame):
@@ -15,6 +16,7 @@ class WindowManager(wx.Frame):
                                             style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
         # self.SetIcon(wx.Icon('icon/app-logo.ico'))
         self.CenterOnScreen()
+        self.status_bar = StatusBar(self)
         self.panel = MainPanel(self)
         self.tool_bar = ToolBar(self)
         self.menu_bar = MenuBar(self)
