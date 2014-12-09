@@ -5,6 +5,7 @@ import os.path
 import wx
 from dictionary.database import DataBase, LogDB
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
+from utils import DATE_FORMAT
 
 
 class WordView(object):
@@ -92,7 +93,7 @@ class MainPanel(wx.Panel):
                 # save definition to database and get it to display on overlay
                 self.num_word += 1
                 now = wx.DateTime.Now()
-                today = now.Format("%Y-%m-%d")
+                today = now.Format(DATE_FORMAT)
                 saved_def = DataBase.normalize_saved_def(word_def)
                 view_def = self.normalize_view_def(saved_def)
                 self.saved_words[new_word] = saved_def
@@ -126,8 +127,7 @@ class MainPanel(wx.Panel):
             ColumnDefn('No', 'center', 50, 'id'),
             ColumnDefn('Word', 'left', 50, 'value'),
             ColumnDefn('Definition', 'left', 550, 'definition'),
-            # ColumnDefn('Date', 'left', 100, 'date', stringConverter="%d-%b-%Y"),
-            ColumnDefn('Date', 'left', 100, 'date'),
+            ColumnDefn('Date', 'left', 80, 'date'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=image_getter)
         ])
 
