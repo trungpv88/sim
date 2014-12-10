@@ -1,6 +1,7 @@
 __author__ = 'trungpv'
 from ObjectListView import ObjectListView, ColumnDefn
 from word.word import Word
+from word.word_view import WordDisplay
 import os.path
 import wx
 from dictionary.database import DataBase, LogDB
@@ -33,7 +34,7 @@ class MainPanel(wx.Panel):
         self.log_db = LogDB()
         self.log = self.log_db.load()
         # display words on overlay
-        self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
+        self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER | wx.LC_SINGLE_SEL)
         self.sound = self.dataOlv.AddNamedImages('user', wx.Bitmap('icon/sound.ico'))
         self.set_columns()
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -160,12 +161,10 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
-        selected_obj = self.dataOlv.GetSelectedObjects()
-        word_def = ""
-        for obj in selected_obj:
-            word_def += obj.value.upper() + '\n'
-            for line in self.saved_words[obj.value]:
+        selected_obj = self.dataOlv.GetSelectedObject()
+        if selected_obj is not None:
+            word_def = ""
+            for line in self.saved_words[selected_obj.value]:
                 word_def += line.decode('utf-8') + '\n'
-            word_def += '-------------------------------------------\n'
-        msg_box = wx.MessageDialog(None, word_def, 'Word Definition', style=wx.OK | wx.ICON_INFORMATION)
-        msg_box.ShowModal()
+            word_view = WordDisplay(self, selected_obj.value.upper(), word_def)
+            word_view.ShowModal()
