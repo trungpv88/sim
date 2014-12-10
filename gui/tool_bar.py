@@ -111,6 +111,7 @@ class TestDialog(wx.Dialog):
         self.log_db = LogDB()
         self.log = self.log_db.load()
         self.test_words = []
+        self.answer_words = []
         self.audio_list = {}
         self.current_word_pos = 0
         self.get_audio_list()
@@ -239,7 +240,7 @@ class TestDialog(wx.Dialog):
         answer_grid_sizer = wx.GridSizer(3, 2, vgap=7)
         answer_grid_sizer.Add(wx.StaticText(self, -1, 'You hear:', size=(70, 20)))
         answer_grid_sizer.Add(self.listen_word)
-        answer_grid_sizer.Add(wx.StaticText(self, -1, 'Word answer:', size=(70, 20)))
+        answer_grid_sizer.Add(wx.StaticText(self, -1, 'Answer:', size=(70, 20)))
         answer_grid_sizer.Add(self.answer_text)
         answer_grid_sizer.Add(wx.StaticText(self, -1, 'Hits / Total:', size=(70, 20)))
         answer_grid_sizer.Add(self.hit_text)
@@ -262,6 +263,7 @@ class TestDialog(wx.Dialog):
         result_grid_sizer = wx.GridSizer(1, 3)
         result_mark_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_mark.ico'), style=wx.BORDER_NONE)
         result_mark_btn.SetToolTip(wx.ToolTip('View result detail'))
+        result_mark_btn.Bind(wx.EVT_BUTTON, self.on_view_result_detail)
         result_log_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_log.ico'), style=wx.BORDER_NONE)
         result_log_btn.SetToolTip(wx.ToolTip('View result log'))
         result_grid_sizer.Add(result_mark_btn, wx.ALIGN_RIGHT)
@@ -352,6 +354,7 @@ class TestDialog(wx.Dialog):
         """
         self.is_pronounce = True
         # check the answer
+        self.answer_words.append(self.listen_word.GetValue())
         if self.listen_word.GetValue() == self.test_words[self.current_word_pos]:
             self.word_hit += 1
         self.word_count += 1
@@ -400,6 +403,14 @@ class TestDialog(wx.Dialog):
             return
         self.timer.Start(1000)
 
+    def on_view_result_detail(self, e):
+        result_detail = 'Answer - Listen\n'
+        if len(self.answer_words) == len(self.test_words):
+            for i in range(len(self.test_words)):
+                result_detail += '%s. %s - %s \n' % (i + 1,  self.test_words[i], self.answer_words[i])
+        result_detail_dialog = wx.MessageDialog(None, result_detail, 'Result detail', style=wx.OK | wx.ICON_INFORMATION)
+        result_detail_dialog.ShowModal()
+
     def init_param(self):
         """
         Initialize parameters before starting test
@@ -410,6 +421,7 @@ class TestDialog(wx.Dialog):
         self.current_word_pos = 0
         self.word_hit = 0
         self.word_count = 0
+        self.answer_words = []
         self.hit_text.SetLabel(HIT_TEXT_DEFAULT)
         self.hit_text.SetForegroundColour(wx.Colour(0, 0, 0))
         self.nb_words = self.nb_words_cb.GetValue()
