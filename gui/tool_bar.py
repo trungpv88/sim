@@ -89,11 +89,11 @@ class CalendarDialog(wx.Dialog):
         :return:
         """
         month_year = "%02d-%02d" % (year, month,)
-        days = {}
-        for k, v in self.log.items():
+        days = []
+        for v in self.log.itervalues():
             if v[0][:7] == month_year:
-                days[v[0][9]] = ''
-        for k in days.iterkeys():
+                days.append(v[0][8:])
+        for k in days:
             highlight = wx.calendar.CalendarDateAttr(border=wx.calendar.CAL_BORDER_SQUARE,
                                                      colBorder=wx.Colour(255, 255, 255),
                                                      colText=wx.Colour(255, 0, 0), colBack=wx.Colour(0, 255, 0))

@@ -3,6 +3,7 @@ import pickle
 import os
 DB_PATH = "db.pkl"
 LOG_PATH = 'log.pkl'
+IMAGE_PATH = 'image.pkl'
 
 
 class BaseModel(object):
@@ -70,5 +71,8 @@ class LogDB(BaseModel):
     def __init__(self):
         super(LogDB, self).__init__(LOG_PATH)
 
-    
+
+class ImageDB(BaseModel):
+    def __init__(self):
+        super(ImageDB, self).__init__(IMAGE_PATH)
 
