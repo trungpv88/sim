@@ -29,7 +29,6 @@ class WindowManager(wx.Frame):
         """
         self.menu_design()
         self.tool_bar_design()
-        self.tool_strip_design()
         self.Show(True)
 
     def menu_design(self):
@@ -108,6 +107,3 @@ class WindowManager(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.tool_bar.track_learning, calendar_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.test_vocabulary, test_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.configure_server, setting_tool_btn)
-
-    def tool_strip_design(self):
-        print ''

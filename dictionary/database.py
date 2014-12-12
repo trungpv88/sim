@@ -1,4 +1,3 @@
-__author__ = 'User'
 import pickle
 import os
 DB_PATH = "db.pkl"
@@ -7,6 +6,9 @@ IMAGE_PATH = 'image.pkl'
 
 
 class BaseModel(object):
+    """
+    A abstract class to access database
+    """
     def __init__(self, path):
         self.path = path
 
@@ -68,11 +70,17 @@ class DataBase(BaseModel):
 
 
 class LogDB(BaseModel):
+    """
+    Log database contains some information like: the learned day, ..
+    """
     def __init__(self):
         super(LogDB, self).__init__(LOG_PATH)
 
 
 class ImageDB(BaseModel):
+    """
+    Image database contains the description images
+    """
     def __init__(self):
         super(ImageDB, self).__init__(IMAGE_PATH)
 

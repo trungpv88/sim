@@ -1,4 +1,3 @@
-__author__ = 'trungpv'
 from ObjectListView import ObjectListView, ColumnDefn
 from word.word import Word
 from word.word_view import WordDisplay
@@ -150,7 +149,7 @@ class MainPanel(wx.Panel):
         """
         name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
         if name_box.ShowModal() == wx.ID_OK:
-            new_word = name_box.GetValue()
+            new_word = name_box.GetValue().lower()
             self.add_new_data(new_word)
 
     def play_pronunciation(self, e):

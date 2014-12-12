@@ -1,4 +1,3 @@
-__author__ = 'User'
 import wx
 import wx.lib.agw.thumbnailctrl as tc
 from urllib import FancyURLopener

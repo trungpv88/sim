@@ -1,4 +1,3 @@
-__author__ = 'User'
 import urllib2
 import wx
 from definition import DefParser

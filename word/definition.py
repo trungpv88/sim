@@ -1,4 +1,3 @@
-__author__ = 'User'
 from sgmllib import SGMLParser
 
 
