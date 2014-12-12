@@ -8,8 +8,13 @@ HIT_TEXT_DEFAULT = '-/- (--%)'
 
 
 def convert_image_to_string(path):
+    """
+    Convert image to string for storing images in database
+    :param path:
+    :return:
+    """
     output = StringIO.StringIO()
-    image = Image.open(path)
+    image = Image.open(path).convert('RGB')
     image.save(output, format='JPEG')
     contents = output.getvalue()
     output.close()
@@ -17,6 +22,11 @@ def convert_image_to_string(path):
 
 
 def convert_string_to_image(contents):
+    """
+    Convert string to image for extracting images from database
+    :param contents:
+    :return:
+    """
     buff = StringIO.StringIO()
     buff.write(contents)
     buff.seek(0)

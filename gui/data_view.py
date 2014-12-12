@@ -4,6 +4,7 @@ from word.word import Word
 from word.word_view import WordDisplay
 import os.path
 import wx
+import thread
 from dictionary.database import DataBase, LogDB
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import DATE_FORMAT
@@ -22,11 +23,12 @@ class WordView(object):
 
 class MainPanel(wx.Panel):
     """
-    http://www.blog.pythonlibrary.org/2009/12/23/wxpython-using-objectlistview-instead-of-a-listctrl/
+    A region to view short information of learned words
     """
     def __init__(self, parent):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         # get word data
+        self.is_running_thread = True
         self.dict_db = DataBase()
         self.saved_words = self.dict_db.load()
         self.num_word = len(self.saved_words)
@@ -68,7 +70,6 @@ class MainPanel(wx.Panel):
     def view_data(self):
         """
         Display word definition on overlay
-        :param word_list:
         :return:
         """
         self.saved_to_view_words()
@@ -77,43 +78,50 @@ class MainPanel(wx.Panel):
     def add_new_data(self, new_word):
         """
         Add a record to data overlay
+        Note: Process remains running
         :param new_word:
         :return:
         """
-        progress_max = 100
-        progress_dlg = wx.ProgressDialog('Connecting to servers...', 'Time remaining', progress_max,
-                                         style=wx.PD_ELAPSED_TIME | wx.PD_REMAINING_TIME | wx.PD_AUTO_HIDE)
-        progress_dlg.Update(0)
+        self.is_running_thread = True
         w = Word(value=new_word)
         # check whether new word exists or is blank
         if new_word not in self.saved_words.keys() and new_word != "":
-            # take definition from server
-            word_def = w.get_definition()
-            progress_dlg.Update(30)
-            if word_def is not '':
-                # save definition to database and get it to display on overlay
-                self.num_word += 1
-                now = wx.DateTime.Now()
-                today = now.Format(DATE_FORMAT)
-                saved_def = DataBase.normalize_saved_def(word_def)
-                view_def = self.normalize_view_def(saved_def)
-                self.saved_words[new_word] = saved_def
-                self.dict_db.save(self.saved_words)
-                progress_dlg.Update(60)
-                # display definition on overlay
-                self.view_words.append(WordView(self.num_word, new_word, view_def, today))
-                self.dataOlv.SetObjects(self.view_words)
-                progress_dlg.Update(70)
-                # save date to log file
-                self.log[new_word] = []
-                self.log[new_word].append(today)
-                self.log_db.save(self.log)
-                progress_dlg.Update(80)
+            # take definition from server using multi thread to increase speed
+            thread.start_new_thread(self.thread_word_definition, (new_word, w))
         # get word pronunciation from server and update 'sound' icon on overlay
         w.get_pronunciation()
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
-        progress_dlg.Update(100)
-        progress_dlg.Destroy()
+
+    def thread_word_definition(self, new_word, w):
+        """
+        Create a thread to process the fetching definition word
+        :param new_word:
+        :param w:
+        :return:
+        """
+        if not self.is_running_thread:
+            self.is_running_thread = False
+            thread.exit()
+            return
+        word_def = w.get_definition()
+        if word_def is not '':
+            # save definition to database and get it to display on overlay
+            self.num_word += 1
+            now = wx.DateTime.Now()
+            today = now.Format(DATE_FORMAT)
+            saved_def = DataBase.normalize_saved_def(word_def)
+            view_def = self.normalize_view_def(saved_def)
+            self.saved_words[new_word] = saved_def
+            self.dict_db.save(self.saved_words)
+            # display definition on overlay
+            self.view_words.append(WordView(self.num_word, new_word, view_def, today))
+            self.dataOlv.SetObjects(self.view_words)
+            # save date to log file
+            self.log[new_word] = []
+            self.log[new_word].append(today)
+            self.log_db.save(self.log)
+        self.is_running_thread = False
+        thread.exit()
 
     def set_columns(self):
         """
