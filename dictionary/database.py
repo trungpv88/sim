@@ -3,6 +3,7 @@ import os
 DB_PATH = "db.pkl"
 LOG_PATH = 'log.pkl'
 IMAGE_PATH = 'image.pkl'
+PHRASE_PATH = 'phrase.pkl'
 
 
 class BaseModel(object):
@@ -84,3 +85,10 @@ class ImageDB(BaseModel):
     def __init__(self):
         super(ImageDB, self).__init__(IMAGE_PATH)
 
+
+class PhraseDB(BaseModel):
+    """
+    Image database contains the description images
+    """
+    def __init__(self):
+        super(PhraseDB, self).__init__(PHRASE_PATH)

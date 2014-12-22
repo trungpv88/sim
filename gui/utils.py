@@ -1,4 +1,3 @@
-__author__ = 'User'
 import StringIO
 from PIL import Image
 DATE_FORMAT = "%Y-%m-%d"

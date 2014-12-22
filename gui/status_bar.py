@@ -1,5 +1,6 @@
 import wx
 import urllib2
+GOOGLE_SERVER_IP = 'http://74.125.228.100'
 
 
 class StatusBar(wx.StatusBar):
@@ -9,12 +10,17 @@ class StatusBar(wx.StatusBar):
     def __init__(self, parent):
         self.parent = parent
         self.status_bar = self.parent.CreateStatusBar()
-        self.status_bar.SetFieldsCount(2)  # create 2 fields on status bar
-        self.status_bar.SetStatusWidths([-1, 36])
+        self.status_bar.SetFieldsCount(3)  # create 2 fields on status bar
+        self.status_bar.SetStatusWidths([100, -1, 36])
         self.network_field = wx.BitmapButton(self.status_bar, -1, size=(16, 16), style=wx.BORDER_NONE)
+
+        self.nb_word_status = wx.StaticText(self.status_bar, -1, 'Word number: ', style=wx.ALIGN_CENTER)
+        self.reposition_field(self.nb_word_status, 0)
+
         self.update_network_status()
         self.network_field.SetToolTip(wx.ToolTip('Click to check internet connection'))
         self.network_field.Bind(wx.EVT_LEFT_DOWN, self.on_network_clicked)
+        self.reposition_field(self.network_field, 2)
 
     def reposition_field(self, control, position):
         """
@@ -46,7 +52,7 @@ class StatusBar(wx.StatusBar):
         :return:
         """
         try:
-            urllib2.urlopen('http://74.125.228.100', timeout=2)  # host of google
+            urllib2.urlopen(GOOGLE_SERVER_IP, timeout=2)  # host of google
             return True
         except urllib2.URLError as err:
             pass
@@ -60,3 +66,5 @@ class StatusBar(wx.StatusBar):
         """
         self.update_network_status()
 
+    def update_word_nb(self, nb):
+        self.nb_word_status.SetLabel('Word number: %s' % nb)

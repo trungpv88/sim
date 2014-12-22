@@ -1,4 +1,3 @@
-__author__ = 'trungpv'
 import wx
 from data_view import MainPanel
 from tool_bar import ToolBar
@@ -17,7 +16,7 @@ class WindowManager(wx.Frame):
         # self.SetIcon(wx.Icon('icon/app-logo.ico'))
         self.CenterOnScreen()
         self.status_bar = StatusBar(self)
-        self.panel = MainPanel(self)
+        self.panel = MainPanel(self, self.status_bar)
         self.tool_bar = ToolBar(self)
         self.menu_bar = MenuBar(self)
         self.basic_gui()
@@ -87,23 +86,27 @@ class WindowManager(wx.Frame):
         """
         tool_bar = self.CreateToolBar()
         add_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Add', wx.Bitmap('icon/add_word.ico'), shortHelp='Add new word')
+        delete_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Delete', wx.Bitmap('icon/delete_word.ico'),
+                                                shortHelp='Delete a word')
         play_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Play', wx.Bitmap('icon/play_pronunciation.ico'),
                                               shortHelp='Play word pronunciation')
         define_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Definition', wx.Bitmap('icon/view_definition.ico'),
                                                 shortHelp='View word definitions')
-        language_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Languages', wx.Bitmap('icon/dictionary.ico'),
-                                                  shortHelp='Change learning language')
         calendar_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Calendar', wx.Bitmap('icon/calendar.ico'),
                                                   shortHelp='Track learning')
         test_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Test', wx.Bitmap('icon/test.ico'),
                                               shortHelp='Test your vocabulary')
+        phrase_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Phrase', wx.Bitmap('icon/phrase.ico'),
+                                                shortHelp='View ordinary phrases')
         setting_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Setting', wx.Bitmap('icon/setting.ico'),
-                                                 shortHelp='Configure servers')
+                                                 shortHelp='View configuration servers')
+
         tool_bar.Realize()
         self.Bind(wx.EVT_TOOL, self.panel.add_word, add_tool_btn)
+        self.Bind(wx.EVT_TOOL, self.panel.delete_word, delete_tool_btn)
         self.Bind(wx.EVT_TOOL, self.panel.play_pronunciation, play_tool_btn)
         self.Bind(wx.EVT_TOOL, self.panel.view_definition, define_tool_btn)
-        self.Bind(wx.EVT_TOOL, self.tool_bar.change_language, language_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.track_learning, calendar_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.test_vocabulary, test_tool_btn)
+        self.Bind(wx.EVT_TOOL, self.tool_bar.view_phrases, phrase_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.configure_server, setting_tool_btn)

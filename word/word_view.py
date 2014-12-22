@@ -19,6 +19,7 @@ class WordDisplay(wx.Dialog):
     """
     def __init__(self, parent, title, content):
         super(WordDisplay, self).__init__(parent, wx.ID_ANY, 'Definition of ' + title)
+        self.parent = parent
         self.is_running = True
         self.word_images_directory = 'image'
         if not os.path.exists(self.word_images_directory):
@@ -158,6 +159,7 @@ class WordDisplay(wx.Dialog):
         """
         self.image_dict[self.title] = self.images_saved
         self.image_db.save(self.image_dict)
+        self.parent.set_columns()  # update image icon in list view
         self.Destroy()
 
     def show_image_thumbs(self):
