@@ -75,7 +75,7 @@ class WindowManager(wx.Frame):
         help_btn.AppendItem(guide_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.guide, guide_item)
 
-        menu_bar.Append(file_btn, '&File')
+        menu_bar.Append(file_btn, '&System')
         menu_bar.Append(help_btn, '&Help')
         self.SetMenuBar(menu_bar)
 

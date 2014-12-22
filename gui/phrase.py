@@ -64,7 +64,7 @@ class PhraseDialog(wx.Dialog):
         Update the phrase number
         :return:
         """
-        self.nb_phrase_status.SetLabel('Word number: %s' % len(self.view_phrases))
+        self.nb_phrase_status.SetLabel('Phrase number: %s' % len(self.view_phrases))
 
     def set_columns(self):
         """

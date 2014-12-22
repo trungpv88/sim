@@ -1,4 +1,5 @@
 import wx
+import wx.html as html
 
 
 class MenuBar(object):
@@ -56,4 +57,18 @@ class MenuBar(object):
         wx.AboutBox(info)
 
     def guide(self, e):
-        print 'help'
+        HelpDialog(self.parent, 'Help')
+
+
+class HelpDialog(wx.Dialog):
+    def __init__(self, parent, title):
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(640, 480))
+        self.design_dialog()
+        self.ShowModal()
+
+    def design_dialog(self):
+        dialog_sizer = wx.BoxSizer(wx.VERTICAL)
+        help_html = html.HtmlWindow(self, -1, style=wx.NO_BORDER)
+        help_html.LoadPage('help.html')
+        dialog_sizer.Add(help_html, 1, wx.ALL | wx.EXPAND, border=10)
+        self.SetSizer(dialog_sizer)
