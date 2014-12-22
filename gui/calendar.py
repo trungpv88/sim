@@ -126,17 +126,24 @@ class CalendarDialog(wx.Dialog):
     def on_close(self, e):
         self.Destroy()
 
+
 class LineChartDialog(wx.Dialog):
     """
     Reference: http://zetcode.com/wxpython/gdi/
     """
     def __init__(self, parent, title, chart_title, data, x_range, y_range, x_cell, y_cell):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(390, 350))
-        line_box = wx.BoxSizer(wx.HORIZONTAL)
+        line_box = wx.BoxSizer(wx.VERTICAL)
+        close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         line_chart = LineChart(self, chart_title, data, x_range, y_range, x_cell, y_cell)
         line_box.Add(line_chart, 1, wx.EXPAND | wx.ALL, 15)
+        line_box.Add(close_btn, 0, wx.BOTTOM | wx.ALIGN_CENTER, 10)
         self.SetSizer(line_box)
         self.ShowModal()
+
+    def on_close(self, e):
+        self.Destroy()
 
 
 class LineChart(wx.Panel):
