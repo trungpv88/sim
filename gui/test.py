@@ -13,7 +13,7 @@ class TestDialog(wx.Dialog):
     """
     def __init__(self, parent, title):
         # wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(255, 365))
-        super(TestDialog, self).__init__(parent, wx.ID_ANY, title, size=(280, 400))
+        super(TestDialog, self).__init__(parent, wx.ID_ANY, title, size=(320, 400))
         self.is_pronounce = False
         self.log_db = LogDB()
         self.log = self.log_db.load()
@@ -27,16 +27,16 @@ class TestDialog(wx.Dialog):
         self.led = None
         self.timer = None
         self.play_btn = None
-        self.start_date_picker = wx.DatePickerCtrl(self, -1, style=wx.DP_DROPDOWN, size=(100, 20))
+        self.start_date_picker = wx.DatePickerCtrl(self, -1, style=wx.DP_DROPDOWN, size=(130, 20))
         self.start_date = None
         self.Bind(wx.EVT_DATE_CHANGED, self.update_words_in_date_range)
-        self.end_date_picker = wx.DatePickerCtrl(self, -1, style=wx.DP_DROPDOWN, size=(100, 20))
+        self.end_date_picker = wx.DatePickerCtrl(self, -1, style=wx.DP_DROPDOWN, size=(130, 20))
         self.end_date = None
-        self.words_date_range = wx.StaticText(self, -1, '0 words')
+        self.words_date_range = wx.StaticText(self, -1, '0 words', size=(130, 20))
         self.nb_words_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY, choices=['10', '20', '50', '100'],
-                                       size=(100, 20))
+                                       size=(130, 20))
         self.nb_words = None
-        self.delay_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY, choices=['5', '10'], size=(100, 20))
+        self.delay_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY, choices=['5', '10'], size=(130, 20))
         self.delay = None
         self.answer_text = wx.StaticText(self, -1, '---', size=(70, 20))
         self.answer_text.SetForegroundColour((0, 0, 255))
@@ -183,7 +183,7 @@ class TestDialog(wx.Dialog):
         :return:
         """
         control_grid_sizer = wx.GridSizer(1, 3)
-        self.play_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/play.ico'), size=(36, 36), style=wx.BORDER_NONE)
+        self.play_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/play.ico'), size=(40, 40), style=wx.BORDER_NONE)
         self.play_btn.SetBitmapDisabled(wx.Bitmap('icon/play_disable.ico'))
         self.play_btn.SetToolTip(wx.ToolTip('Listen'))
         self.play_btn.Bind(wx.EVT_BUTTON, self.on_play_test)

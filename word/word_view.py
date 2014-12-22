@@ -81,7 +81,7 @@ class WordDisplay(wx.Dialog):
         description_image_sizer = wx.BoxSizer(wx.VERTICAL)
         self.thumbnails.ShowFileNames(False)
         self.show_image_thumbs()
-        change_image_btn = wx.Button(self, -1, 'Get randomly word description images from Google Image Search')
+        change_image_btn = wx.Button(self, -1, 'Get randomly word description images from Google')
         change_image_btn.Bind(wx.EVT_BUTTON, self.change_description_images)
         description_image_sizer.Add(self.thumbnails, 1, wx.EXPAND | wx.ALL, 10)
         description_image_sizer.Add(change_image_btn, 0, wx.ALIGN_CENTER_HORIZONTAL)

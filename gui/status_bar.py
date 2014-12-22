@@ -11,7 +11,7 @@ class StatusBar(wx.StatusBar):
         self.parent = parent
         self.status_bar = self.parent.CreateStatusBar()
         self.status_bar.SetFieldsCount(3)  # create 2 fields on status bar
-        self.status_bar.SetStatusWidths([100, -1, 36])
+        self.status_bar.SetStatusWidths([130, -1, 36])
         self.network_field = wx.BitmapButton(self.status_bar, -1, size=(16, 16), style=wx.BORDER_NONE)
 
         self.nb_word_status = wx.StaticText(self.status_bar, -1, 'Word number: ', style=wx.ALIGN_CENTER)

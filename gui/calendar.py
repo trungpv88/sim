@@ -10,9 +10,10 @@ class CalendarDialog(wx.Dialog):
     def __init__(self, parent, title):
         self.log_db = LogDB()
         self.log = self.log_db.load()
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(300, 250))
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(420, 250), style=wx.DEFAULT_DIALOG_STYLE)
         today = wx.DateTime_Now()
-        self.calendar = wx.calendar.CalendarCtrl(self, wx.ID_ANY, today, style=wx.calendar.CAL_MONDAY_FIRST)
+        self.calendar = wx.calendar.CalendarCtrl(self, wx.ID_ANY, today, style=wx.calendar.CAL_MONDAY_FIRST,
+                                                 size=(280, 250))
         self.words = wx.TextCtrl(self, wx.ID_ANY, '', style=wx.TE_MULTILINE | wx.TE_READONLY)
         self.show_learnt_date(today.GetMonth() + 1, today.GetYear())
         self.design_interface()
