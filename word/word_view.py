@@ -57,9 +57,12 @@ class WordDisplay(wx.Dialog):
         word_title = self.create_title()
         description_image = self.create_description_image()
         definition_box = self.create_definition_box()
+        close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         main_sizer.Add(word_title, 0, wx.ALIGN_CENTER_HORIZONTAL, 1)
         main_sizer.Add(description_image, 0, wx.EXPAND, 1)
         main_sizer.Add(definition_box, 1, wx.EXPAND | wx.ALL, 10)
+        main_sizer.Add(close_btn, 0, wx.ALIGN_CENTER | wx.BOTTOM, 10)
         return main_sizer
 
     def create_title(self):

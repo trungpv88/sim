@@ -46,8 +46,12 @@ class PhraseDialog(wx.Dialog):
         delete_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/delete.ico'), style=wx.BORDER_NONE)
         delete_btn.SetToolTip(wx.ToolTip('Delete a phrase'))
         delete_btn.Bind(wx.EVT_BUTTON, self.delete_phrase)
+        close_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/close.ico'), style=wx.BORDER_NONE)
+        close_btn.SetToolTip(wx.ToolTip('Close'))
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         control_grid_sizer.Add(add_btn, 0, wx.RIGHT, 8)
-        control_grid_sizer.Add(delete_btn, 1)
+        control_grid_sizer.Add(delete_btn, 0, wx.RIGHT, 8)
+        control_grid_sizer.Add(close_btn, 1)
         return control_grid_sizer
 
     def create_status_sizer(self):
@@ -131,6 +135,9 @@ class PhraseDialog(wx.Dialog):
                 self.dataOlv.SetObjects(self.view_phrases)
                 self.update_nb_phrase()
             yes_no_box.Destroy()
+
+    def on_close(self, e):
+        self.Destroy()
 
 
 class Phrase(object):

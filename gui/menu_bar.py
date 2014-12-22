@@ -68,7 +68,13 @@ class HelpDialog(wx.Dialog):
 
     def design_dialog(self):
         dialog_sizer = wx.BoxSizer(wx.VERTICAL)
+        close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         help_html = html.HtmlWindow(self, -1, style=wx.NO_BORDER)
         help_html.LoadPage('help.html')
         dialog_sizer.Add(help_html, 1, wx.ALL | wx.EXPAND, border=10)
+        dialog_sizer.Add(close_btn, 0, wx.ALIGN_CENTER | wx.BOTTOM, 10)
         self.SetSizer(dialog_sizer)
+
+    def on_close(self, e):
+        self.Destroy()

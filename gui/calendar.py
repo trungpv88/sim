@@ -32,11 +32,14 @@ class CalendarDialog(wx.Dialog):
         word_sizer = wx.BoxSizer(wx.VERTICAL)
         month_btn = wx.Button(self, wx.ID_ANY, 'This month')
         year_btn = wx.Button(self, wx.ID_ANY, 'This year')
+        close_btn = wx.Button(self, -1, 'OK')
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         month_btn.Bind(wx.EVT_BUTTON, self.show_month_chart)
         year_btn.Bind(wx.EVT_BUTTON, self.show_year_chart)
         word_sizer.Add(month_btn, 0, wx.BOTTOM | wx.EXPAND, border=10)
         word_sizer.Add(year_btn, 0, wx.BOTTOM | wx.EXPAND, border=10)
-        word_sizer.Add(self.words, 1, wx.ALL | wx.EXPAND, border=0)
+        word_sizer.Add(self.words, 1, wx.BOTTOM | wx.EXPAND, border=10)
+        word_sizer.Add(close_btn, 0, wx.BOTTOM | wx.EXPAND, border=0)
         box_sizer.Add(word_sizer, 1, wx.ALL | wx.EXPAND, border=10)
         self.SetSizer(box_sizer)
 
@@ -120,6 +123,8 @@ class CalendarDialog(wx.Dialog):
                                                      colText=wx.Colour(255, 0, 0), colBack=wx.Colour(0, 255, 0))
             self.calendar.SetAttr(day=int(k), attr=highlight)
 
+    def on_close(self, e):
+        self.Destroy()
 
 class LineChartDialog(wx.Dialog):
     """

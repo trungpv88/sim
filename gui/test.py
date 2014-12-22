@@ -167,15 +167,7 @@ class TestDialog(wx.Dialog):
         Create buttons to view results
         :return:
         """
-        result_grid_sizer = wx.GridSizer(1, 3)
-        result_mark_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_mark.ico'), style=wx.BORDER_NONE)
-        result_mark_btn.SetToolTip(wx.ToolTip('View result detail'))
-        result_mark_btn.Bind(wx.EVT_BUTTON, self.on_view_result_detail)
-        result_log_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_log.ico'), style=wx.BORDER_NONE)
-        result_log_btn.SetToolTip(wx.ToolTip('View result log'))
-        result_grid_sizer.Add(result_mark_btn, wx.ALIGN_RIGHT)
-        result_grid_sizer.Add(result_log_btn)
-        return result_grid_sizer
+        return wx.StaticText(self, -1, '')
 
     def create_control(self):
         """
@@ -187,9 +179,15 @@ class TestDialog(wx.Dialog):
         self.play_btn.SetBitmapDisabled(wx.Bitmap('icon/play_disable.ico'))
         self.play_btn.SetToolTip(wx.ToolTip('Listen'))
         self.play_btn.Bind(wx.EVT_BUTTON, self.on_play_test)
-        control_grid_sizer.Add(wx.StaticText(self, -1, ''))
-        control_grid_sizer.Add(wx.StaticText(self, -1, ''))
+        result_mark_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_mark.ico'), style=wx.BORDER_NONE)
+        result_mark_btn.SetToolTip(wx.ToolTip('View result detail'))
+        result_mark_btn.Bind(wx.EVT_BUTTON, self.on_view_result_detail)
+        close_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/close.ico'), style=wx.BORDER_NONE)
+        close_btn.SetToolTip(wx.ToolTip('Close'))
+        close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         control_grid_sizer.Add(self.play_btn)
+        control_grid_sizer.Add(result_mark_btn)
+        control_grid_sizer.Add(close_btn)
         return control_grid_sizer
 
     def get_audio_list(self):
