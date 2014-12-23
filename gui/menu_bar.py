@@ -49,9 +49,13 @@ class MenuBar(object):
                     shutil.copy(DB_PATH, new_db)
                     break
                 else:
-                    dlg = wx.MessageDialog(None, 'File name exists!', 'Sim',
-                                           style=wx.OK | wx.ICON_EXCLAMATION)
-                    dlg.ShowModal()
+                    dlg = wx.MessageDialog(None, 'File name exists. Would you want to overwrite this file?', 'Sim',
+                                           style=wx.YES_NO | wx.ICON_EXCLAMATION)
+                    if dlg.ShowModal() == wx.ID_YES:
+                        if os.path.exists(new_db):
+                            os.remove(new_db)
+                        shutil.copy(DB_PATH, new_db)
+                        break
             else:
                 dlg = wx.MessageDialog(None, 'Empty file name!!', 'Sim',
                                        style=wx.OK | wx.ICON_EXCLAMATION)
