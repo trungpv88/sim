@@ -1,6 +1,6 @@
 import wx
 import wx.calendar
-from dictionary.database import LogDB
+from dictionary.database import DataBase
 
 
 class CalendarDialog(wx.Dialog):
@@ -8,8 +8,10 @@ class CalendarDialog(wx.Dialog):
     A class to show calendar and to highlight the learning days
     """
     def __init__(self, parent, title):
-        self.log_db = LogDB()
-        self.log = self.log_db.load()
+        self.db = DataBase()
+        self.dict_db = self.db.load()
+        self.word_date = {}
+        self.get_date()
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(420, 250), style=wx.DEFAULT_DIALOG_STYLE)
         today = wx.DateTime_Now()
         self.calendar = wx.calendar.CalendarCtrl(self, wx.ID_ANY, today, style=wx.calendar.CAL_MONDAY_FIRST,
@@ -18,6 +20,14 @@ class CalendarDialog(wx.Dialog):
         self.show_learnt_date(today.GetMonth() + 1, today.GetYear())
         self.design_interface()
         self.ShowModal()
+
+    def get_date(self):
+        """
+        Get word date from dictionary extracted from database
+        :return:
+        """
+        for w, v in self.dict_db.items():
+            self.word_date[w] = v['date']
 
     def design_interface(self):
         """
@@ -56,9 +66,9 @@ class CalendarDialog(wx.Dialog):
         learnt_words = {}
         for i in range(31):
             learnt_words[i * 10] = 0
-        for k, v in self.log.items():
-            if v[0][0:7] == month_year:
-                learnt_words[(int(v[0][8:10]) - 1) * 10] += 10
+        for k, v in self.word_date.items():
+            if v[0:7] == month_year:
+                learnt_words[(int(v[8:10]) - 1) * 10] += 10
         LineChartDialog(self, 'Sim', month_year, learnt_words, 31, 21, 10, 10)
 
     def show_year_chart(self, e):
@@ -72,9 +82,9 @@ class CalendarDialog(wx.Dialog):
         learnt_words = {}
         for i in range(12):
             learnt_words[i * 25] = 0
-        for k, v in self.log.items():
-            if v[0][0:4] == str(year):
-                learnt_words[(int(v[0][5:7]) - 1) * 25] += 1
+        for k, v in self.word_date.items():
+            if v[0:4] == str(year):
+                learnt_words[(int(v[5:7]) - 1) * 25] += 1
         LineChartDialog(self, 'Sim', str(year), learnt_words, 12, 21, 25, 1)
 
     def on_date_selected(self, e):
@@ -89,8 +99,8 @@ class CalendarDialog(wx.Dialog):
         year = date.GetYear()
         date_str = "%02d-%02d-%02d" % (year, month, day)
         learnt_words = ""
-        for k, v in self.log.items():
-            if v[0] == date_str:
+        for k, v in self.word_date.items():
+            if v == date_str:
                 learnt_words += k + '\n'
         self.words.SetValue(learnt_words)
 
@@ -114,9 +124,9 @@ class CalendarDialog(wx.Dialog):
         """
         month_year = "%02d-%02d" % (year, month,)
         days = []
-        for v in self.log.itervalues():
-            if v[0][:7] == month_year:
-                days.append(v[0][8:])
+        for v in self.word_date.itervalues():
+            if v[:7] == month_year:
+                days.append(v[8:])
         for k in days:
             highlight = wx.calendar.CalendarDateAttr(border=wx.calendar.CAL_BORDER_SQUARE,
                                                      colBorder=wx.Colour(255, 255, 255),

@@ -8,7 +8,7 @@ DICT_URL = "http://www.oxforddictionaries.com/definition/english/"
 # GG_TRANSLATE_URL = "http://translate.google.com/translate_tts?tl=en&q="
 MP3_EXTENSION = ".mp3"
 OGG_EXTENSION = ".ogg"
-AUDIO_DIR = "audio/"
+AUDIO_DIR = "tmp/"
 
 
 class Audio(object):

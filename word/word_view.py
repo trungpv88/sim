@@ -5,7 +5,7 @@ import urllib2
 import simplejson
 from random import shuffle, randint
 import os.path
-from dictionary.database import ImageDB
+from dictionary.database import DataBase
 from gui.utils import convert_image_to_string, convert_string_to_image
 import shutil
 import thread
@@ -25,9 +25,11 @@ class WordDisplay(wx.Dialog):
         if not os.path.exists(self.word_images_directory):
             os.makedirs(self.word_images_directory)
         self.title = title.lower()
-        self.image_db = ImageDB()
-        self.image_dict = self.image_db.load()
-        self.images_saved = self.image_dict.get(self.title, [])
+        self.db = DataBase()
+        self.dict_db = self.db.load()
+        self.word_image = {}
+        self.get_image()
+        self.images_saved = self.word_image.get(self.title, [])
         self.load_from_db_to_image()
         self.content = content
         self.thumbnails = tc.ThumbnailCtrl(self, -1, thumboutline=tc.THUMB_OUTLINE_FULL,
@@ -35,6 +37,14 @@ class WordDisplay(wx.Dialog):
         main_sizer = self.design_interface()
         self.SetSizer(main_sizer)
         self.Bind(wx.EVT_CLOSE, self.on_close)
+
+    def get_image(self):
+        """
+        Get word description image from dictionary extracted from database
+        :return:
+        """
+        for w, v in self.dict_db.items():
+            self.word_image[w] = v.get('image', [])
 
     def load_from_db_to_image(self):
         """
@@ -160,8 +170,9 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
-        self.image_dict[self.title] = self.images_saved
-        self.image_db.save(self.image_dict)
+        self.dict_db[self.title]['image'] = self.images_saved
+        self.db.save(self.dict_db)
+        self.parent.update_db()
         self.parent.set_columns()  # update image icon in list view
         self.Destroy()
 

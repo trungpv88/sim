@@ -1,10 +1,11 @@
 import wx
 import random
 import os.path
-from dictionary.database import LogDB
+from dictionary.database import DataBase
 from utils import DATE_FORMAT, HIT_TEXT_DEFAULT
 from word.word import Word
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
+from utils import convert_string_to_ogg
 
 
 class TestDialog(wx.Dialog):
@@ -15,13 +16,14 @@ class TestDialog(wx.Dialog):
         # wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(255, 365))
         super(TestDialog, self).__init__(parent, wx.ID_ANY, title, size=(320, 400))
         self.is_pronounce = False
-        self.log_db = LogDB()
-        self.log = self.log_db.load()
+        self.db = DataBase()
+        self.dict_db = self.db.load()
+        self.word_date = {}
+        self.get_date()
+        self.create_audio_list()
         self.test_words = []
         self.answer_words = []
-        self.audio_list = {}
         self.current_word_pos = 0
-        self.get_audio_list()
         self.panel = wx.Panel(self)
         self.parent = parent
         self.led = None
@@ -49,6 +51,14 @@ class TestDialog(wx.Dialog):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.update_words_in_date_range(None)
         self.ShowModal()
+
+    def get_date(self):
+        """
+        Get word date from dictionary extracted from database
+        :return:
+        """
+        for w, v in self.dict_db.items():
+            self.word_date[w] = v['date']
 
     def dialog_design(self):
         """
@@ -179,10 +189,11 @@ class TestDialog(wx.Dialog):
         self.play_btn.SetBitmapDisabled(wx.Bitmap('icon/play_disable.ico'))
         self.play_btn.SetToolTip(wx.ToolTip('Listen'))
         self.play_btn.Bind(wx.EVT_BUTTON, self.on_play_test)
-        result_mark_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_mark.ico'), style=wx.BORDER_NONE)
+        result_mark_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/result_mark.ico'), size=(40, 40),
+                                          style=wx.BORDER_NONE)
         result_mark_btn.SetToolTip(wx.ToolTip('View result detail'))
         result_mark_btn.Bind(wx.EVT_BUTTON, self.on_view_result_detail)
-        close_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/close.ico'), style=wx.BORDER_NONE)
+        close_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/close.ico'), size=(40, 40), style=wx.BORDER_NONE)
         close_btn.SetToolTip(wx.ToolTip('Close'))
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         control_grid_sizer.Add(self.play_btn)
@@ -190,14 +201,16 @@ class TestDialog(wx.Dialog):
         control_grid_sizer.Add(close_btn)
         return control_grid_sizer
 
-    def get_audio_list(self):
+    def create_audio_list(self):
         """
         Get words having pronunciation
         :return:
         """
-        for word, v in self.log.items():
-            if os.path.exists(AUDIO_DIR + word + OGG_EXTENSION):
-                self.audio_list[word] = v[0]
+        for word, v in self.word_date.items():
+            audio_str = self.dict_db[word].get('audio', '')
+            path = AUDIO_DIR + word + OGG_EXTENSION
+            if not os.path.exists(path) and len(audio_str) > 0:
+                convert_string_to_ogg(audio_str, path)
 
     def update_words_in_date_range(self, e):
         """
@@ -210,7 +223,7 @@ class TestDialog(wx.Dialog):
         end_date = self.end_date_picker.GetValue()
         end_date = end_date.Format(DATE_FORMAT)
         # get words learnt from start_date to end_date
-        self.test_words = [w for w, d in self.audio_list.items() if end_date >= d >= start_date]
+        self.test_words = [w for w, d in self.word_date.items() if end_date >= d >= start_date]
         self.words_date_range.SetLabel('%s words' % len(self.test_words))
 
     def pronounce(self):
