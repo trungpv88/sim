@@ -53,7 +53,7 @@ class Word(object):
         if os.path.exists(path):
             return convert_ogg_to_string(path)
         else:
-            return
+            return ''
 
     def pronounce(self):
         """
