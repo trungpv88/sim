@@ -1,5 +1,9 @@
 import wx
 import wx.html as html
+import shutil
+import os
+import ntpath
+from dictionary.database import DB_PATH
 
 
 class MenuBar(object):
@@ -7,23 +11,55 @@ class MenuBar(object):
         self.parent = parent
         self.panel = panel
 
+    def open_db(self, title, op_type):
+        yes_no_msg_dlg = wx.MessageDialog(None, title, 'Sim', style=wx.YES_NO | wx.ICON_EXCLAMATION)
+        result_dlg = yes_no_msg_dlg.ShowModal()
+        if result_dlg == wx.ID_YES:
+            self.save_db()
+        if result_dlg == wx.ID_NO:
+            if os.path.exists(DB_PATH):
+                os.remove(DB_PATH)
+        if op_type == 'new':
+            if os.path.exists(DB_PATH):
+                os.remove(DB_PATH)
+            self.panel.new_panel()
+        if op_type == 'load':
+            open_dlg = wx.FileDialog(self.parent, 'Open database', '', '', 'pkl files (*.pkl)|*.pkl',
+                                     wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+            if  open_dlg.ShowModal() == wx.ID_OK:
+                db_name = ntpath.basename(open_dlg.GetPath())
+                shutil.copy(db_name, DB_PATH)
+            self.panel.new_panel()
+            open_dlg.Destroy()
+        yes_no_msg_dlg.Destroy()
+
     def new(self, e):
-        file_name_box = wx.TextEntryDialog(None, 'Please enter the database file name: ', 'Sim', '')
-        if file_name_box.ShowModal() == wx.ID_OK:
-            new_word = file_name_box.GetValue().lower()
-            if new_word != '':
-                print 'xxx'
-                # self.panel.new_panel(new_word)
-        file_name_box.Destroy()
+        self.open_db(title='Would you like to save current data before open new database?', op_type='new')
 
     def open(self, e):
-        print ''
+        self.open_db(title='Would you like to save current data before load a database?', op_type='load')
+
+    def save_db(self):
+        file_name_box = wx.TextEntryDialog(None, 'Please enter database name: ', 'Sim', '')
+        while file_name_box.ShowModal() == wx.ID_OK:
+            new_word = file_name_box.GetValue()
+            if new_word != '':
+                new_db = new_word + '.pkl'
+                if not os.path.exists(new_db):
+                    shutil.copy(DB_PATH, new_db)
+                    break
+                else:
+                    dlg = wx.MessageDialog(None, 'File name exists!', 'Sim',
+                                           style=wx.OK | wx.ICON_EXCLAMATION)
+                    dlg.ShowModal()
+            else:
+                dlg = wx.MessageDialog(None, 'Empty file name!!', 'Sim',
+                                       style=wx.OK | wx.ICON_EXCLAMATION)
+                dlg.ShowModal()
+        file_name_box.Destroy()
 
     def save(self, e):
-        print ''
-
-    def save_as(self, e):
-        print ''
+        self.save_db()
 
     def quit(self, e):
         """

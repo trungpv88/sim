@@ -54,11 +54,6 @@ class WindowManager(wx.Frame):
         save_item.SetBitmap(wx.Bitmap('icon/save_db.ico'))
         file_btn.AppendItem(save_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.save, save_item)
-        # 'Save As' menu button
-        save_as_item = wx.MenuItem(file_btn, wx.ID_ANY, 'Save As...')
-        save_as_item.SetBitmap(wx.Bitmap('icon/save_as_db.ico'))
-        file_btn.AppendItem(save_as_item)
-        self.Bind(wx.EVT_MENU, self.menu_bar.save_as, save_as_item)
         # 'Exit' menu button
         exit_item = wx.MenuItem(file_btn, wx.ID_ANY, 'Exit')
         exit_item.SetBitmap(wx.Bitmap('icon/exit.ico'))

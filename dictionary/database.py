@@ -1,9 +1,6 @@
 import pickle
 import os
 DB_PATH = "db.pkl"
-LOG_PATH = 'log.pkl'
-IMAGE_PATH = 'image.pkl'
-PHRASE_PATH = 'phrase.pkl'
 
 
 class BaseModel(object):
@@ -69,27 +66,3 @@ class DataBase(BaseModel):
                 normal_lines.append(normal_line)
                 line_num += 1
         return normal_lines
-
-
-class LogDB(BaseModel):
-    """
-    Log database contains some information like: the learned day, ..
-    """
-    def __init__(self):
-        super(LogDB, self).__init__(LOG_PATH)
-
-
-class ImageDB(BaseModel):
-    """
-    Image database contains the description images
-    """
-    def __init__(self):
-        super(ImageDB, self).__init__(IMAGE_PATH)
-
-
-class PhraseDB(BaseModel):
-    """
-    Image database contains the description images
-    """
-    def __init__(self):
-        super(PhraseDB, self).__init__(PHRASE_PATH)

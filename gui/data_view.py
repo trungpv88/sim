@@ -46,6 +46,19 @@ class MainPanel(wx.Panel):
         self.view_data()
         self.status_bar.update_word_nb(len(self.view_words))
 
+    def new_panel(self):
+        """
+        Refresh overlay when open new database
+        :return:
+        """
+        self.db = DataBase()
+        self.dict_db = self.db.load()
+        self.word_definition = {}
+        self.word_date = {}
+        self.get_definition()
+        self.view_words = []
+        self.view_data()
+        self.status_bar.update_word_nb(len(self.view_words))
 
     @staticmethod
     def remove_audio_files():
