@@ -3,7 +3,7 @@ import wx.calendar
 import wx.lib.calendar
 import wx.gizmos
 from test import TestDialog
-from calendar import CalendarDialog
+from cal import CalendarDialog
 from phrase import PhraseDialog
 from server import ServerDialog
 

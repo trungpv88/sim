@@ -1,6 +1,7 @@
 import wx
 import wx.calendar
 from dictionary.database import DataBase
+from calendar import monthrange, isleap
 
 
 class CalendarDialog(wx.Dialog):
@@ -40,8 +41,8 @@ class CalendarDialog(wx.Dialog):
         self.calendar.Bind(wx.calendar.EVT_CALENDAR_MONTH, self.on_month_changed)
         self.calendar.Bind(wx.calendar.EVT_CALENDAR_YEAR, self.on_month_changed)
         word_sizer = wx.BoxSizer(wx.VERTICAL)
-        month_btn = wx.Button(self, wx.ID_ANY, 'This month')
-        year_btn = wx.Button(self, wx.ID_ANY, 'This year')
+        month_btn = wx.Button(self, wx.ID_ANY, 'Month statistic')
+        year_btn = wx.Button(self, wx.ID_ANY, 'Year statistic')
         close_btn = wx.Button(self, -1, 'OK')
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         month_btn.Bind(wx.EVT_BUTTON, self.show_month_chart)
@@ -69,7 +70,7 @@ class CalendarDialog(wx.Dialog):
         for k, v in self.word_date.items():
             if v[0:7] == month_year:
                 learnt_words[(int(v[8:10]) - 1) * 10] += 10
-        LineChartDialog(self, 'Sim', month_year, learnt_words, 31, 21, 10, 10)
+        LineChartDialog(self, 'Sim', month_year, learnt_words, 31, 21, 10, 10, monthrange(int(year), int(month))[1])
 
     def show_year_chart(self, e):
         """
@@ -85,7 +86,7 @@ class CalendarDialog(wx.Dialog):
         for k, v in self.word_date.items():
             if v[0:4] == str(year):
                 learnt_words[(int(v[5:7]) - 1) * 25] += 1
-        LineChartDialog(self, 'Sim', str(year), learnt_words, 12, 21, 25, 1)
+        LineChartDialog(self, 'Sim', str(year), learnt_words, 12, 21, 25, 1, 365 + int(isleap(int(year))))
 
     def on_date_selected(self, e):
         """
@@ -141,16 +142,27 @@ class LineChartDialog(wx.Dialog):
     """
     Reference: http://zetcode.com/wxpython/gdi/
     """
-    def __init__(self, parent, title, chart_title, data, x_range, y_range, x_cell, y_cell):
+    def __init__(self, parent, title, chart_title, data, x_range, y_range, x_cell, y_cell, days):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(390, 350))
         line_box = wx.BoxSizer(wx.VERTICAL)
         close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         line_chart = LineChart(self, chart_title, data, x_range, y_range, x_cell, y_cell)
-        line_box.Add(line_chart, 1, wx.EXPAND | wx.ALL, 15)
+        total_word = self.count_total_word(data, y_cell)
+        total_word_lbl = wx.StaticText(self, wx.ID_ANY, "Total: %s words (%.4f w/d)"
+                                       % (total_word, (float(total_word) / days)), size=(200, 20))
+        line_box.Add(line_chart, 1, wx.EXPAND | wx.ALL, 10)
+        line_box.Add(total_word_lbl, 0, wx.LEFT, 10)
         line_box.Add(close_btn, 0, wx.BOTTOM | wx.ALIGN_CENTER, 10)
         self.SetSizer(line_box)
         self.ShowModal()
+
+    @staticmethod
+    def count_total_word(data, y_cell):
+        count = 0
+        for k, v in data.items():
+            count += int(v)
+        return count / y_cell
 
     def on_close(self, e):
         self.Destroy()

@@ -1,5 +1,6 @@
 import urllib2
 import wx
+import os.path
 from definition import DefParser
 from pronunciation import Audio, AUDIO_DIR, DICT_URL, MP3_EXTENSION, OGG_EXTENSION, GG_SEARCH_URL
 from gui.utils import convert_ogg_to_string
@@ -47,9 +48,12 @@ class Word(object):
         """
         self.audio.save_mp3_file()
         self.audio.convert_mp3_to_ogg()
-        audio_str = convert_ogg_to_string(AUDIO_DIR + self.word + OGG_EXTENSION)
+        path = AUDIO_DIR + self.word + OGG_EXTENSION
         self.audio.delete_mp3_file()
-        return audio_str
+        if os.path.exists(path):
+            return convert_ogg_to_string(path)
+        else:
+            return
 
     def pronounce(self):
         """

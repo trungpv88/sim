@@ -35,14 +35,15 @@ class BaseModel(object):
 
 class DataBase(BaseModel):
     """
-    Words are saved in database under dictionary type.
-    The keys are words and the values are their definitions under list type.
-    For example:
-    {'hello':['1. def1', '2. def2'], 'world':['1. w1', '2. w2']}
+    Database structure
+    [word_dict, phrase_dict]:
+    + word_dict: a dictionary containing word information.
+      For ex: {'word':{'definition':'ex', 'date':'2014', 'audio':'@#$', 'image':'%^&'}}
+    + phrase_dict: a dictionary containing phrase information
+      For ex: {'phrase':['meaning', 'date']}
     """
     def __init__(self):
         super(DataBase, self).__init__(DB_PATH)
-        self.name = None
 
     @staticmethod
     def normalize_saved_def(lines):

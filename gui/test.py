@@ -58,7 +58,9 @@ class TestDialog(wx.Dialog):
         :return:
         """
         for w, v in self.dict_db[0].items():
-            self.word_date[w] = v['date']
+            # check whether audio file exists
+            if len(v.get('audio', '')) > 0:
+                self.word_date[w] = v['date']
 
     def dialog_design(self):
         """
@@ -224,7 +226,7 @@ class TestDialog(wx.Dialog):
         end_date = end_date.Format(DATE_FORMAT)
         # get words learnt from start_date to end_date
         self.test_words = [w for w, d in self.word_date.items() if end_date >= d >= start_date]
-        self.words_date_range.SetLabel('%s words' % len(self.test_words))
+        self.words_date_range.SetLabel('%s words (having audio)' % len(self.test_words))
 
     def pronounce(self):
         """

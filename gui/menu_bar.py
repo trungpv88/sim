@@ -3,11 +3,18 @@ import wx.html as html
 
 
 class MenuBar(object):
-    def __init__(self, parent):
+    def __init__(self, parent, panel):
         self.parent = parent
+        self.panel = panel
 
     def new(self, e):
-        print ''
+        file_name_box = wx.TextEntryDialog(None, 'Please enter the database file name: ', 'Sim', '')
+        if file_name_box.ShowModal() == wx.ID_OK:
+            new_word = file_name_box.GetValue().lower()
+            if new_word != '':
+                print 'xxx'
+                # self.panel.new_panel(new_word)
+        file_name_box.Destroy()
 
     def open(self, e):
         print ''

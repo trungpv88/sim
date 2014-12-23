@@ -46,6 +46,7 @@ class MainPanel(wx.Panel):
         self.view_data()
         self.status_bar.update_word_nb(len(self.view_words))
 
+
     @staticmethod
     def remove_audio_files():
         """

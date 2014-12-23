@@ -18,7 +18,7 @@ class WindowManager(wx.Frame):
         self.status_bar = StatusBar(self)
         self.panel = MainPanel(self, self.status_bar)
         self.tool_bar = ToolBar(self)
-        self.menu_bar = MenuBar(self)
+        self.menu_bar = MenuBar(self, self.panel)
         self.basic_gui()
 
     def basic_gui(self):
@@ -50,17 +50,17 @@ class WindowManager(wx.Frame):
         file_btn.AppendItem(open_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.open, open_item)
         # 'Save' menu button
-        save_item = wx.MenuItem(file_btn, wx.ID_SAVE, 'Save...')
+        save_item = wx.MenuItem(file_btn, wx.ID_ANY, 'Save...')
         save_item.SetBitmap(wx.Bitmap('icon/save_db.ico'))
         file_btn.AppendItem(save_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.save, save_item)
         # 'Save As' menu button
-        save_as_item = wx.MenuItem(file_btn, wx.ID_SAVEAS, 'Save As...')
+        save_as_item = wx.MenuItem(file_btn, wx.ID_ANY, 'Save As...')
         save_as_item.SetBitmap(wx.Bitmap('icon/save_as_db.ico'))
         file_btn.AppendItem(save_as_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.save_as, save_as_item)
         # 'Exit' menu button
-        exit_item = wx.MenuItem(file_btn, wx.ID_EXIT, 'Exit')
+        exit_item = wx.MenuItem(file_btn, wx.ID_ANY, 'Exit')
         exit_item.SetBitmap(wx.Bitmap('icon/exit.ico'))
         file_btn.AppendItem(exit_item)
         self.Bind(wx.EVT_MENU, self.menu_bar.quit, exit_item)
