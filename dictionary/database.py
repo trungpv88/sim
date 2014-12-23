@@ -28,7 +28,7 @@ class BaseModel(object):
         :return:
         """
         if not os.path.exists(self.path):
-            self.save()
+            self.save([{}, {}])
         with open(self.path, 'rb') as f:
             return pickle.load(f)
 

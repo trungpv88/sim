@@ -62,7 +62,7 @@ class MainPanel(wx.Panel):
         Get word definition from dictionary extracted from database
         :return:
         """
-        for w, v in self.dict_db.items():
+        for w, v in self.dict_db[0].items():
             self.word_definition[w] = v['definition']
             self.word_date[w] = v['date']
 
@@ -107,13 +107,13 @@ class MainPanel(wx.Panel):
         w = Word(value=new_word)
         # check whether new word exists or is blank
         if new_word not in self.word_definition.keys() and new_word != "":
-            self.dict_db[new_word] = {}
+            self.dict_db[0][new_word] = {}
             # take definition from server using multi thread to increase speed
             thread.start_new_thread(self.thread_word_definition, (new_word, w))
         # get word pronunciation from server and update 'sound' icon on overlay
         if new_word != "":
             audio_str = w.get_pronunciation()
-            self.dict_db[new_word]['audio'] = audio_str
+            self.dict_db[0][new_word]['audio'] = audio_str
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
 
     def thread_word_definition(self, new_word, w):
@@ -135,8 +135,8 @@ class MainPanel(wx.Panel):
             saved_def = DataBase.normalize_saved_def(word_def)
             view_def = self.normalize_view_def(saved_def)
             self.word_definition[new_word] = saved_def
-            self.dict_db[new_word]['definition'] = saved_def
-            self.dict_db[new_word]['date'] = today
+            self.dict_db[0][new_word]['definition'] = saved_def
+            self.dict_db[0][new_word]['date'] = today
             self.db.save(self.dict_db)
             # display definition on overlay
             self.view_words.append(WordView(new_word, view_def, today))
@@ -152,11 +152,11 @@ class MainPanel(wx.Panel):
         :return:
         """
         def sound_getter(word):
-            if len(self.dict_db[word.value].get('audio', [])) > 0:
+            if len(self.dict_db[0][word.value].get('audio', [])) > 0:
                 return self.sound
 
         def image_getter(word):
-            if len(self.dict_db[word.value].get('image', [])) > 0:
+            if len(self.dict_db[0][word.value].get('image', [])) > 0:
                 return self.image
 
         self.dataOlv.SetColumns([
@@ -188,7 +188,7 @@ class MainPanel(wx.Panel):
         """
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
-            audio_str = self.dict_db[selected_obj.value].get('audio', '')
+            audio_str = self.dict_db[0][selected_obj.value].get('audio', '')
             path = AUDIO_DIR + selected_obj.value + OGG_EXTENSION
             if not os.path.exists(path) and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
@@ -222,7 +222,7 @@ class MainPanel(wx.Panel):
                 self.view_words = [w for w in self.view_words if w.value != selected_obj.value]
                 self.dataOlv.SetObjects(self.view_words)
                 del self.word_definition[selected_obj.value]
-                del self.dict_db[selected_obj.value]
+                del self.dict_db[0][selected_obj.value]
                 self.db.save(self.dict_db)
                 # display word number on status bar
                 self.status_bar.update_word_nb(len(self.view_words))

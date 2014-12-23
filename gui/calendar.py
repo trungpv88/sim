@@ -26,7 +26,7 @@ class CalendarDialog(wx.Dialog):
         Get word date from dictionary extracted from database
         :return:
         """
-        for w, v in self.dict_db.items():
+        for w, v in self.dict_db[0].items():
             self.word_date[w] = v['date']
 
     def design_interface(self):

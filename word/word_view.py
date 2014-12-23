@@ -43,7 +43,7 @@ class WordDisplay(wx.Dialog):
         Get word description image from dictionary extracted from database
         :return:
         """
-        for w, v in self.dict_db.items():
+        for w, v in self.dict_db[0].items():
             self.word_image[w] = v.get('image', [])
 
     def load_from_db_to_image(self):
@@ -170,7 +170,7 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
-        self.dict_db[self.title]['image'] = self.images_saved
+        self.dict_db[0][self.title]['image'] = self.images_saved
         self.db.save(self.dict_db)
         self.parent.update_db()
         self.parent.set_columns()  # update image icon in list view

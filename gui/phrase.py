@@ -1,7 +1,7 @@
 import wx
 from ObjectListView import ObjectListView, ColumnDefn
 from utils import DATE_FORMAT
-from dictionary.database import PhraseDB
+from dictionary.database import DataBase
 
 
 class PhraseDialog(wx.Dialog):
@@ -12,8 +12,9 @@ class PhraseDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(640, 480))
         self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER | wx.LC_SINGLE_SEL)
         self.nb_phrase_status = wx.StaticText(self, -1, 'Phrase number: ', style=wx.ALIGN_LEFT)
-        self.phrase_db = PhraseDB()
-        self.phrase_dict = self.phrase_db.load()
+        self.db = DataBase()
+        self.dict_db = self.db.load()
+        self.phrase_dict = self.dict_db[1]
         self.view_phrases = []
         self.get_phrases()
         self.set_columns()
@@ -113,7 +114,8 @@ class PhraseDialog(wx.Dialog):
                 now = wx.DateTime.Now()
                 today = now.Format(DATE_FORMAT)
                 self.phrase_dict[new_phrase] = [meaning, today]
-                self.phrase_db.save(self.phrase_dict)
+                self.dict_db[1][new_phrase] = [meaning, today]
+                self.db.save(self.dict_db)
                 self.get_phrases()
                 self.dataOlv.SetObjects(self.view_phrases)
                 self.update_nb_phrase()
@@ -130,7 +132,9 @@ class PhraseDialog(wx.Dialog):
             yes_no_box = wx.MessageDialog(None, 'Are you sure you want to delete this phrase?', 'Sim',  wx.YES_NO)
             if yes_no_box.ShowModal() == wx.ID_YES:
                 del self.phrase_dict[selected_obj.phrase]
-                self.phrase_db.save(self.phrase_dict)
+                # del self.dict_db[1][selected_obj.phrase]
+                # not necessary because self.phrase_dict references to self.dict_db[1]
+                self.db.save(self.dict_db)
                 self.view_phrases = [w for w in self.view_phrases if w.phrase != selected_obj.phrase]
                 self.dataOlv.SetObjects(self.view_phrases)
                 self.update_nb_phrase()

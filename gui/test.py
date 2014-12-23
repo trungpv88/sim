@@ -57,7 +57,7 @@ class TestDialog(wx.Dialog):
         Get word date from dictionary extracted from database
         :return:
         """
-        for w, v in self.dict_db.items():
+        for w, v in self.dict_db[0].items():
             self.word_date[w] = v['date']
 
     def dialog_design(self):
@@ -207,7 +207,7 @@ class TestDialog(wx.Dialog):
         :return:
         """
         for word, v in self.word_date.items():
-            audio_str = self.dict_db[word].get('audio', '')
+            audio_str = self.dict_db[0][word].get('audio', '')
             path = AUDIO_DIR + word + OGG_EXTENSION
             if not os.path.exists(path) and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
