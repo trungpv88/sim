@@ -152,7 +152,7 @@ class LineChartDialog(wx.Dialog):
         total_word_lbl = wx.StaticText(self, wx.ID_ANY, "Total: %s words (%.4f w/d)"
                                        % (total_word, (float(total_word) / days)), size=(200, 20))
         line_box.Add(line_chart, 1, wx.EXPAND | wx.ALL, 10)
-        line_box.Add(total_word_lbl, 0, wx.LEFT, 10)
+        line_box.Add(total_word_lbl, 0, wx.CENTER, 10)
         line_box.Add(close_btn, 0, wx.BOTTOM | wx.ALIGN_CENTER, 10)
         self.SetSizer(line_box)
         self.ShowModal()

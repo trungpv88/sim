@@ -14,16 +14,6 @@ class ToolBar(object):
     """
     def __init__(self, parent):
         self.parent = parent
-        self.choose_language = 'English'
-
-    def change_language(self, e):
-        """
-        Event raises when change language button is clicked
-        """
-        self.choose_language = wx.SingleChoiceDialog(None, 'Choose your learning language:', 'Language',
-                                                ['English', 'French'])
-        if self.choose_language.ShowModal() == wx.ID_OK:
-            print self.choose_language.GetStringSelection()
 
     def track_learning(self, e):
         """
@@ -41,7 +31,7 @@ class ToolBar(object):
         """
         Event raises when when view phrases button is clicked
         """
-        PhraseDialog(self.parent, 'Ordinary Phrases')
+        PhraseDialog(self.parent, 'Ordinary Phrases/Topics')
 
     def configure_server(self, e):
         """

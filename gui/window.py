@@ -92,7 +92,7 @@ class WindowManager(wx.Frame):
         test_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Test', wx.Bitmap('icon/test.ico'),
                                               shortHelp='Test your vocabulary')
         phrase_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Phrase', wx.Bitmap('icon/phrase.ico'),
-                                                shortHelp='View ordinary phrases')
+                                                shortHelp='View ordinary phrases/topics')
         setting_tool_btn = tool_bar.AddLabelTool(wx.ID_ANY, 'Setting', wx.Bitmap('icon/setting.ico'),
                                                  shortHelp='View configuration servers')
 

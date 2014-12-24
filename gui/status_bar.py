@@ -18,7 +18,6 @@ class StatusBar(wx.StatusBar):
         self.reposition_field(self.nb_word_status, 0)
 
         self.update_network_status()
-        self.network_field.SetToolTip(wx.ToolTip('Click to check internet connection'))
         self.network_field.Bind(wx.EVT_LEFT_DOWN, self.on_network_clicked)
         self.reposition_field(self.network_field, 2)
 
@@ -41,9 +40,11 @@ class StatusBar(wx.StatusBar):
         network_on = wx.Bitmap('icon/network_on.ico')
         if self.is_connecting_internet():
             self.network_field.SetBitmapLabel(network_on)
+            self.network_field.SetToolTip(wx.ToolTip('Internet access'))
         else:
             self.network_field.SetBitmapLabel(network_off)
-        self.reposition_field(self.network_field, 1)
+            self.network_field.SetToolTip(wx.ToolTip('Not connected'))
+        self.reposition_field(self.network_field, 2)
 
     @staticmethod
     def is_connecting_internet():

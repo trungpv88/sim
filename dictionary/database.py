@@ -25,7 +25,7 @@ class BaseModel(object):
         :return:
         """
         if not os.path.exists(self.path):
-            self.save([{}, {}])
+            self.save([{}, [{}, {}], [{}, {}]])
         with open(self.path, 'rb') as f:
             return pickle.load(f)
 
@@ -33,11 +33,13 @@ class BaseModel(object):
 class DataBase(BaseModel):
     """
     Database structure
-    [word_dict, phrase_dict]:
+    [word_dict, [phrase_dict], [sentence_dict]]:
     + word_dict: a dictionary containing word information.
       For ex: {'word':{'definition':'ex', 'date':'2014', 'audio':'@#$', 'image':'%^&'}}
-    + phrase_dict: a dictionary containing phrase information
-      For ex: {'phrase':['meaning', 'date']}
+    + phrase_dict: a list of dictionaries containing phrase information
+      For ex: [{'phrase':['meaning', 'date']}, {'salut':['signification', 'date']}]
+    + phrase_dict: a list of dictionaries containing phrase information
+      For ex: [{'sentences':['love', 'I love you.']}, {'phrases':['amour', 'je t'aime']}]
     """
     def __init__(self):
         super(DataBase, self).__init__(DB_PATH)
