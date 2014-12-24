@@ -284,6 +284,7 @@ class PhraseDialog(wx.Dialog):
             if self.lang_index != lang_index:
                 self.lang_index = lang_index
                 self.update_overlay()
+        choose_language.Destroy()
 
     def change_mode(self, e):
         """
@@ -300,6 +301,7 @@ class PhraseDialog(wx.Dialog):
             if self.db_index != mode_index:
                 self.db_index = mode_index
                 self.update_overlay()
+        choose_mode.Destroy()
 
     def view_edit_content(self, e):
         """
@@ -309,7 +311,7 @@ class PhraseDialog(wx.Dialog):
         """
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
-            content_dlg = ContentDialog(self, selected_obj.phrase.upper(), selected_obj.meaning)
+            content_dlg = ContentDialog(self, selected_obj.phrase, selected_obj.meaning)
             content_dlg.ShowModal()
 
     def on_close(self, e):
