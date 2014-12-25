@@ -89,7 +89,7 @@ class MainPanel(wx.Panel):
         """
         word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
         word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
-        return word_view
+        return word_view.decode('utf-8')
 
     def saved_to_view_words(self):
         """
