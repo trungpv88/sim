@@ -125,11 +125,6 @@ class MainPanel(wx.Panel):
                 self.dict_db[0][new_word] = {}
                 # take definition from server using multi thread to increase speed
                 thread.start_new_thread(self.thread_word_definition, (new_word, w))
-            if len(self.dict_db[0][new_word].get('audio', '')) == 0:
-                # get word pronunciation from server and update 'sound' icon on overlay
-                audio_str = w.get_pronunciation()
-                self.dict_db[0][new_word]['audio'] = audio_str
-                self.db.save(self.dict_db)
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
 
     def thread_word_definition(self, new_word, w):
@@ -153,6 +148,9 @@ class MainPanel(wx.Panel):
             self.word_definition[new_word] = saved_def
             self.dict_db[0][new_word]['definition'] = saved_def
             self.dict_db[0][new_word]['date'] = today
+            # get word pronunciation from server and update 'sound' icon on overlay
+            audio_str = w.get_pronunciation()
+            self.dict_db[0][new_word]['audio'] = audio_str
             self.db.save(self.dict_db)
             # display definition on overlay
             self.view_words.append(WordView(new_word, view_def, today))
