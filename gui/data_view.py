@@ -128,6 +128,7 @@ class MainPanel(wx.Panel):
         if new_word != "":
             audio_str = w.get_pronunciation()
             self.dict_db[0][new_word]['audio'] = audio_str
+            self.db.save(self.dict_db)
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
 
     def thread_word_definition(self, new_word, w):
