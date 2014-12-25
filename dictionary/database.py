@@ -38,7 +38,7 @@ class DataBase(BaseModel):
       For ex: {'word':{'definition':'ex', 'date':'2014', 'audio':'@#$', 'image':'%^&'}}
     + phrase_dict: a list of dictionaries containing phrase information
       For ex: [{'phrase':['meaning', 'date']}, {'salut':['signification', 'date']}]
-    + phrase_dict: a list of dictionaries containing phrase information
+    + sentence_dict: a list of dictionaries containing sentence information
       For ex: [{'sentences':['love', 'I love you.']}, {'phrases':['amour', 'je t'aime']}]
     """
     def __init__(self):

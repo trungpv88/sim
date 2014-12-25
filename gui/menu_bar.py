@@ -26,7 +26,7 @@ class MenuBar(object):
         if op_type == 'load':
             open_dlg = wx.FileDialog(self.parent, 'Open database', '', '', 'pkl files (*.pkl)|*.pkl',
                                      wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
-            if  open_dlg.ShowModal() == wx.ID_OK:
+            if open_dlg.ShowModal() == wx.ID_OK:
                 db_name = ntpath.basename(open_dlg.GetPath())
                 shutil.copy(db_name, DB_PATH)
             self.panel.new_panel()

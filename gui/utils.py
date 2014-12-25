@@ -1,5 +1,7 @@
 import StringIO
 import base64
+import os.path
+from pydub import AudioSegment
 from PIL import Image
 DATE_FORMAT = "%Y-%m-%d"
 HIT_TEXT_DEFAULT = '-/- (--%)'
@@ -53,3 +55,22 @@ def convert_ogg_to_string(path):
     with open(path, "rb") as f:
         contents = base64.b64encode(f.read())
     return contents
+
+
+def convert_mp3_to_ogg(mp3_path, ogg_path):
+        """
+        Convert mp3 file to ogg file for cross-platform.
+        :return:
+        """
+        if os.path.exists(mp3_path):
+            mp3_file = AudioSegment.from_mp3(mp3_path)
+            mp3_file.export(ogg_path, format='ogg')
+
+
+def delete_file(file_path):
+    """
+    Delete a file given its path.
+    :return:
+    """
+    if os.path.exists(file_path):
+        os.remove(file_path)

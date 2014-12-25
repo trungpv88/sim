@@ -1,6 +1,8 @@
 import wx
+from word.word import Word
 from ObjectListView import ObjectListView, ColumnDefn
-from utils import DATE_FORMAT
+from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
+from utils import *
 from dictionary.database import DataBase
 
 
@@ -87,7 +89,9 @@ class PhraseDialog(wx.Dialog):
     """
     def __init__(self, parent, title):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(640, 480))
+        self.parent = parent
         self.dataOlv = ObjectListView(self, wx.ID_ANY, style=wx.LC_REPORT | wx.SUNKEN_BORDER | wx.LC_SINGLE_SEL)
+        self.sound = self.dataOlv.AddNamedImages('user', wx.Bitmap('icon/sound.ico'))
         self.nb_status = wx.StaticText(self, -1, 'Total number: ', style=wx.ALIGN_RIGHT)
         self.db = DataBase()
         self.dict_db = self.db.load()
@@ -126,6 +130,12 @@ class PhraseDialog(wx.Dialog):
         delete_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/delete.ico'), style=wx.BORDER_NONE)
         delete_btn.SetToolTip(wx.ToolTip('Delete a phrase/topic'))
         delete_btn.Bind(wx.EVT_BUTTON, self.delete_phrase)
+        add_audio_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/add_sound.ico'), style=wx.BORDER_NONE)
+        add_audio_btn.SetToolTip(wx.ToolTip('Add audio file'))
+        add_audio_btn.Bind(wx.EVT_BUTTON, self.add_audio_file)
+        play_audio_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/play_pronunciation.ico'), style=wx.BORDER_NONE)
+        play_audio_btn.SetToolTip(wx.ToolTip('Play audio file'))
+        play_audio_btn.Bind(wx.EVT_BUTTON, self.play_audio_file)
         content_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/content.ico'), style=wx.BORDER_NONE)
         content_btn.SetToolTip(wx.ToolTip('View/Edit content'))
         content_btn.Bind(wx.EVT_BUTTON, self.view_edit_content)
@@ -140,6 +150,8 @@ class PhraseDialog(wx.Dialog):
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
         control_grid_sizer.Add(add_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(delete_btn, 0, wx.RIGHT, 8)
+        control_grid_sizer.Add(add_audio_btn, 0, wx.RIGHT, 8)
+        control_grid_sizer.Add(play_audio_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(content_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(switch_lang_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(switch_mode_btn, 0, wx.RIGHT, 8)
@@ -175,10 +187,16 @@ class PhraseDialog(wx.Dialog):
         Column design for data overlay
         :return:
         """
+        def sound_getter(phrase):
+            if len(self.dict_db[self.db_index][self.lang_index][phrase.phrase]) > 2:  # [meaning, today, audio]
+            # if len(self.dict_db[0][word.value].get('audio', [])) > 0:
+                return self.sound
+
         self.dataOlv.SetColumns([
-            ColumnDefn('Date', 'left', 100, 'date'),
+            ColumnDefn('Date', 'left', 80, 'date'),
             ColumnDefn('Phrase/Topic', 'left', 250, 'phrase'),
             ColumnDefn('Meaning/Content', 'left', 250, 'meaning'),
+            ColumnDefn('', 'center', 20, 'music', imageGetter=sound_getter)
         ])
         self.dataOlv.SetObjects(self.view_phrases)
 
@@ -313,6 +331,42 @@ class PhraseDialog(wx.Dialog):
         if selected_obj is not None:
             content_dlg = ContentDialog(self, selected_obj.phrase, selected_obj.meaning)
             content_dlg.ShowModal()
+
+    def add_audio_file(self, e):
+        """
+        Event raises when add audio button is clicked
+        :param e:
+        :return:
+        """
+        selected_obj = self.dataOlv.GetSelectedObject()
+        if selected_obj is not None:
+            open_dlg = wx.FileDialog(self.parent, 'Open audio file', '', '', 'mp3 files (*.mp3)|*.mp3',
+                                     wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+            if open_dlg.ShowModal() == wx.ID_OK:
+                audio_file_path = open_dlg.GetPath()
+                ogg_file_path = AUDIO_DIR + selected_obj.phrase + OGG_EXTENSION
+                convert_mp3_to_ogg(audio_file_path, ogg_file_path)
+                audio_content = convert_ogg_to_string(ogg_file_path)
+                self.dict_db[self.db_index][self.lang_index][selected_obj.phrase].append(audio_content)
+                self.db.save(self.dict_db)
+                self.dataOlv.SetObjects(self.view_phrases)
+            open_dlg.Destroy()
+
+    def play_audio_file(self, e):
+        """
+        Event raises when play audio file button is clicked
+        :param e:
+        :return:
+        """
+        selected_obj = self.dataOlv.GetSelectedObject()
+        if selected_obj is not None:
+            if len(self.dict_db[self.db_index][self.lang_index][selected_obj.phrase]) > 2:
+                audio_str = self.dict_db[self.db_index][self.lang_index][selected_obj.phrase][2]
+                path = AUDIO_DIR + selected_obj.phrase + OGG_EXTENSION
+                if not os.path.exists(path) and len(audio_str) > 0:
+                    convert_string_to_ogg(audio_str, path)
+                p = Word(selected_obj.phrase)
+                p.pronounce()
 
     def on_close(self, e):
         self.Destroy()
