@@ -189,13 +189,12 @@ class PhraseDialog(wx.Dialog):
         """
         def sound_getter(phrase):
             if len(self.dict_db[self.db_index][self.lang_index][phrase.phrase]) > 2:  # [meaning, today, audio]
-            # if len(self.dict_db[0][word.value].get('audio', [])) > 0:
                 return self.sound
 
         self.dataOlv.SetColumns([
-            ColumnDefn('Date', 'left', 80, 'date'),
-            ColumnDefn('Phrase/Topic', 'left', 250, 'phrase'),
-            ColumnDefn('Meaning/Content', 'left', 250, 'meaning'),
+            ColumnDefn('Date', 'left', 100, 'date'),
+            ColumnDefn('Phrase/Topic', 'left', 240, 'phrase'),
+            ColumnDefn('Meaning/Content', 'left', 240, 'meaning'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=sound_getter)
         ])
         self.dataOlv.SetObjects(self.view_phrases)
