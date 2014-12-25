@@ -77,8 +77,8 @@ class MainPanel(wx.Panel):
         :return:
         """
         for w, v in self.dict_db[0].items():
-            self.word_definition[w] = v['definition']
-            self.word_date[w] = v['date']
+            self.word_definition[w] = v.get('definition', '')
+            self.word_date[w] = v.get('date', '')
 
     @staticmethod
     def normalize_view_def(word):
@@ -120,15 +120,16 @@ class MainPanel(wx.Panel):
         self.is_running_thread = True
         w = Word(value=new_word)
         # check whether new word exists or is blank
-        if new_word not in self.word_definition.keys() and new_word != "":
-            self.dict_db[0][new_word] = {}
-            # take definition from server using multi thread to increase speed
-            thread.start_new_thread(self.thread_word_definition, (new_word, w))
-        # get word pronunciation from server and update 'sound' icon on overlay
         if new_word != "":
-            audio_str = w.get_pronunciation()
-            self.dict_db[0][new_word]['audio'] = audio_str
-            self.db.save(self.dict_db)
+            if new_word not in self.word_definition.keys():
+                self.dict_db[0][new_word] = {}
+                # take definition from server using multi thread to increase speed
+                thread.start_new_thread(self.thread_word_definition, (new_word, w))
+            else:
+                # get word pronunciation from server and update 'sound' icon on overlay
+                audio_str = w.get_pronunciation()
+                self.dict_db[0][new_word]['audio'] = audio_str
+                self.db.save(self.dict_db)
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
 
     def thread_word_definition(self, new_word, w):
