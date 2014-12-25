@@ -219,7 +219,8 @@ class PhraseDialog(wx.Dialog):
         """
         phrase_box = wx.TextEntryDialog(None, 'Please enter a phrase/topic: ', 'Sim')
         if phrase_box.ShowModal() == wx.ID_OK:
-            new_item = phrase_box.GetValue().lower()
+            new_item = str(phrase_box.GetValue().lower())
+            new_item = new_item.translate(None, '/')  # remove forward slash (confuse with path)
         else:
             phrase_box.Destroy()
             return
