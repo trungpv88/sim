@@ -125,7 +125,7 @@ class MainPanel(wx.Panel):
                 self.dict_db[0][new_word] = {}
                 # take definition from server using multi thread to increase speed
                 thread.start_new_thread(self.thread_word_definition, (new_word, w))
-            else:
+            if len(self.dict_db[0][new_word].get('audio', '')) == 0:
                 # get word pronunciation from server and update 'sound' icon on overlay
                 audio_str = w.get_pronunciation()
                 self.dict_db[0][new_word]['audio'] = audio_str
