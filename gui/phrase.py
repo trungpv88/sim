@@ -148,6 +148,7 @@ class PhraseDialog(wx.Dialog):
         close_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/close.ico'), style=wx.BORDER_NONE)
         close_btn.SetToolTip(wx.ToolTip('Close'))
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
+        self.Bind(wx.EVT_CLOSE, self.on_close)
         control_grid_sizer.Add(add_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(delete_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(add_audio_btn, 0, wx.RIGHT, 8)
@@ -210,6 +211,11 @@ class PhraseDialog(wx.Dialog):
             self.view_phrases.append(tmp_obj)
         self.view_phrases.sort(key=lambda p: (p.date, p.phrase), reverse=True)
 
+    @staticmethod
+    def remove_char(unicode_str):
+        translate_table = dict((ord(char), u'') for char in u'/')
+        return unicode_str.translate(translate_table)
+
     def add_phrase(self, e):
         """
         Event raises when add button is clicked
@@ -218,8 +224,8 @@ class PhraseDialog(wx.Dialog):
         """
         phrase_box = wx.TextEntryDialog(None, 'Please enter a phrase/topic: ', 'Sim')
         if phrase_box.ShowModal() == wx.ID_OK:
-            new_item = str(phrase_box.GetValue().lower())
-            new_item = new_item.translate(None, '/')  # remove forward slash (confuse with path)
+            new_item = phrase_box.GetValue().lower()  # remove forward slash (confuse with path)
+            new_item = self.remove_char(new_item)
         else:
             phrase_box.Destroy()
             return
@@ -369,4 +375,5 @@ class PhraseDialog(wx.Dialog):
                 p.pronounce()
 
     def on_close(self, e):
+        self.parent.panel.update_db()
         self.Destroy()
