@@ -102,6 +102,8 @@ class PhraseDialog(wx.Dialog):
         self.get_phrases()
         self.set_columns()
         self.dialog_design()
+        # for k, v in self.dict_db[self.db_index][self.lang_index].items():
+        #     print len(v)
         self.ShowModal()
 
     def dialog_design(self):
@@ -353,7 +355,9 @@ class PhraseDialog(wx.Dialog):
                 ogg_file_path = AUDIO_DIR + selected_obj.phrase + OGG_EXTENSION
                 convert_mp3_to_ogg(audio_file_path, ogg_file_path)
                 audio_content = convert_ogg_to_string(ogg_file_path)
-                self.dict_db[self.db_index][self.lang_index][selected_obj.phrase].append(audio_content)
+                tmp = self.dict_db[self.db_index][self.lang_index][selected_obj.phrase][:2]
+                tmp.append(audio_content)
+                self.dict_db[self.db_index][self.lang_index][selected_obj.phrase] = tmp
                 self.db.save(self.dict_db)
                 self.dataOlv.SetObjects(self.view_phrases)
             open_dlg.Destroy()
