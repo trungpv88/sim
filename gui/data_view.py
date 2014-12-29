@@ -87,8 +87,11 @@ class MainPanel(wx.Panel):
         :param word:
         :return:
         """
-        word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
-        word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
+        try:
+            word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
+            word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
+        except:
+            return 'Error: can not display the first definition of word.'
         return word_view.decode('utf-8')
 
     def saved_to_view_words(self):
