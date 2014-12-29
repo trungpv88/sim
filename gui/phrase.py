@@ -55,8 +55,12 @@ class TopicDialog(wx.Dialog):
         now = wx.DateTime.Now()
         today = now.Format(DATE_FORMAT)
         content = self.content_text.GetValue()
-        self.parent.phrase_dict[self.title] = [content, today]
-        self.parent.dict_db[self.parent.db_index][self.parent.lang_index][self.title] = [content, today]
+        # self.parent.phrase_dict[self.title] = [content, today]
+        if len(self.parent.dict_db[self.parent.db_index][self.parent.lang_index][self.title]) > 2:
+            audio = self.parent.dict_db[self.parent.db_index][self.parent.lang_index][self.title][2]
+            self.parent.dict_db[self.parent.db_index][self.parent.lang_index][self.title] = [content, today, audio]
+        else:
+            self.parent.dict_db[self.parent.db_index][self.parent.lang_index][self.title] = [content, today]
         self.Destroy()
 
 
