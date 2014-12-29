@@ -31,7 +31,7 @@ class Word(object):
             msg_dlg = wx.MessageDialog(None, "Can not find the definition of '" + self.word + "' on the server.", 'Sim',
                                        style=wx.OK | wx.ICON_EXCLAMATION)
             msg_dlg.ShowModal()
-            return ""
+            return ''
         return self.parser.data
 
     def show_definition(self):

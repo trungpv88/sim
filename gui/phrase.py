@@ -73,17 +73,20 @@ class ContentDialog(TopicDialog):
         """
         Event raises when close button is clicked
         """
-        confirm_msg_dlg = wx.MessageDialog(None, 'Are you sure you want to change this content?', 'Sim',
-                                           style=wx.YES_NO | wx.ICON_EXCLAMATION)
-        if confirm_msg_dlg.ShowModal() == wx.ID_YES:
-            super(ContentDialog, self).on_close(e)
-            self.parent.db.save(self.parent.dict_db)
-            self.parent.get_phrases()
-            self.parent.dataOlv.SetObjects(self.parent.view_phrases)
-            self.parent.update_nb_phrase()
+        if self.content_text.GetValue() != self.parent.phrase_dict[self.title][0]:
+            confirm_msg_dlg = wx.MessageDialog(None, 'Are you sure you want to change this content?', 'Sim',
+                                               style=wx.YES_NO | wx.ICON_EXCLAMATION)
+            if confirm_msg_dlg.ShowModal() == wx.ID_YES:
+                super(ContentDialog, self).on_close(e)
+                self.parent.db.save(self.parent.dict_db)
+                self.parent.get_phrases()
+                self.parent.dataOlv.SetObjects(self.parent.view_phrases)
+                self.parent.update_nb_phrase()
+            else:
+                self.Destroy()
+            confirm_msg_dlg.Destroy()
         else:
             self.Destroy()
-        confirm_msg_dlg.Destroy()
 
 
 class PhraseDialog(wx.Dialog):

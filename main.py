@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Learning english application
+Learning languages (english and french) application
 """
 
 import wx

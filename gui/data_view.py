@@ -147,7 +147,7 @@ class MainPanel(wx.Panel):
             dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
             dlg.ShowModal()
             return
-        if word_def is not '':
+        if word_def != '':
             # save definition to database and get it to display on overlay
             now = wx.DateTime.Now()
             today = now.Format(DATE_FORMAT)
