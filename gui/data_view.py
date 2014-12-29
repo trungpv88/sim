@@ -141,7 +141,12 @@ class MainPanel(wx.Panel):
             self.is_running_thread = False
             thread.exit()
             return
-        word_def = w.get_definition()
+        try:
+            word_def = w.get_definition()
+        except:
+            dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
+            dlg.ShowModal()
+            return
         if word_def is not '':
             # save definition to database and get it to display on overlay
             now = wx.DateTime.Now()
