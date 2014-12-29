@@ -1,4 +1,7 @@
 import wx
+import random
+import time
+import thread
 from word.word import Word
 from ObjectListView import ObjectListView, ColumnDefn
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
@@ -98,6 +101,7 @@ class PhraseDialog(wx.Dialog):
         self.db_index = 1
         self.lang_index = 0
         self.phrase_dict = self.dict_db[self.db_index][self.lang_index]
+        self.play_list = []
         self.view_phrases = []
         self.get_phrases()
         self.set_columns()
@@ -136,8 +140,11 @@ class PhraseDialog(wx.Dialog):
         add_audio_btn.SetToolTip(wx.ToolTip('Add audio file'))
         add_audio_btn.Bind(wx.EVT_BUTTON, self.add_audio_file)
         play_audio_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/play_pronunciation.ico'), style=wx.BORDER_NONE)
-        play_audio_btn.SetToolTip(wx.ToolTip('Play audio file'))
+        play_audio_btn.SetToolTip(wx.ToolTip('Play selected audio'))
         play_audio_btn.Bind(wx.EVT_BUTTON, self.play_audio_file)
+        play_list_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/playlist.ico'), style=wx.BORDER_NONE)
+        play_list_btn.SetToolTip(wx.ToolTip('Shuffle and play all audio'))
+        play_list_btn.Bind(wx.EVT_BUTTON, self.play_list_shuffle)
         content_btn = wx.BitmapButton(self, -1, wx.Bitmap('icon/content.ico'), style=wx.BORDER_NONE)
         content_btn.SetToolTip(wx.ToolTip('View/Edit content'))
         content_btn.Bind(wx.EVT_BUTTON, self.view_edit_content)
@@ -155,6 +162,7 @@ class PhraseDialog(wx.Dialog):
         control_grid_sizer.Add(delete_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(add_audio_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(play_audio_btn, 0, wx.RIGHT, 8)
+        control_grid_sizer.Add(play_list_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(content_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(switch_lang_btn, 0, wx.RIGHT, 8)
         control_grid_sizer.Add(switch_mode_btn, 0, wx.RIGHT, 8)
@@ -362,6 +370,20 @@ class PhraseDialog(wx.Dialog):
                 self.dataOlv.SetObjects(self.view_phrases)
             open_dlg.Destroy()
 
+    def pronounce(self, phrase):
+        """
+        Play audio file given phrase
+        :param phrase:
+        :return:
+        """
+        if len(self.dict_db[self.db_index][self.lang_index][phrase]) > 2:
+            audio_str = self.dict_db[self.db_index][self.lang_index][phrase][2]
+            path = AUDIO_DIR + phrase + OGG_EXTENSION
+            if not os.path.exists(path) and len(audio_str) > 0:
+                convert_string_to_ogg(audio_str, path)
+            p = Word(phrase)
+            p.pronounce()
+
     def play_audio_file(self, e):
         """
         Event raises when play audio file button is clicked
@@ -370,13 +392,29 @@ class PhraseDialog(wx.Dialog):
         """
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
-            if len(self.dict_db[self.db_index][self.lang_index][selected_obj.phrase]) > 2:
-                audio_str = self.dict_db[self.db_index][self.lang_index][selected_obj.phrase][2]
-                path = AUDIO_DIR + selected_obj.phrase + OGG_EXTENSION
-                if not os.path.exists(path) and len(audio_str) > 0:
-                    convert_string_to_ogg(audio_str, path)
-                p = Word(selected_obj.phrase)
-                p.pronounce()
+            self.pronounce(selected_obj.phrase)
+
+    def play_list_shuffle(self, e):
+        """
+        Shuffle and play all audio
+        :return:
+        """
+        self.play_list = random.sample(self.view_phrases, len(self.view_phrases))
+        thread.start_new_thread(self.thread_play_list, ())
+
+    def thread_play_list(self):
+        """
+        Run in multi-thread for another actions
+        :return:
+        """
+        for audio in self.play_list:
+            try:
+                self.pronounce(audio.phrase)
+                time.sleep(2)
+            except:
+                thread.exit()
+                raise
+        thread.exit()
 
     def on_close(self, e):
         self.parent.panel.update_db()
