@@ -28,6 +28,7 @@ class CalendarDialog(wx.Dialog):
         :return:
         """
         for w, v in self.dict_db[0].items():
+            print w, v['date']
             self.word_date[w] = v['date']
 
     def design_interface(self):
