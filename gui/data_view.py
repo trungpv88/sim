@@ -91,7 +91,7 @@ class MainPanel(wx.Panel):
             word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
             word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
         except:
-            return 'Error: can not display the first definition of word.'
+            return 'Error: cannot display the first definition of word.'
         return word_view.decode('utf-8')
 
     def saved_to_view_words(self):
@@ -101,8 +101,13 @@ class MainPanel(wx.Panel):
         :return:
         """
         for k, v in self.word_definition.items():
-            tmp_obj = WordView(k, self.normalize_view_def(v), self.word_date[k])
-            self.view_words.append(tmp_obj)
+            if self.word_date[k] != '':
+                tmp_obj = WordView(k, self.normalize_view_def(v), self.word_date[k])
+                self.view_words.append(tmp_obj)
+            else:
+                # delete error words
+                del self.word_definition[k]
+                del self.dict_db[0][k]
         self.view_words.sort(key=lambda w: (w.date, w.value), reverse=True)
 
     def view_data(self):
