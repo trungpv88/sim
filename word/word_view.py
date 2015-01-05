@@ -21,6 +21,7 @@ class WordDisplay(wx.Dialog):
         super(WordDisplay, self).__init__(parent, wx.ID_ANY, 'Definition of ' + title)
         self.parent = parent
         self.is_running = True
+        self.is_changing_image = False
         self.word_images_directory = 'image'
         if not os.path.exists(self.word_images_directory):
             os.makedirs(self.word_images_directory)
@@ -106,6 +107,7 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
+        self.is_changing_image = True
         self.images_saved = []
         # select images in 20 first result images from google search
         rnd_number = randint(0, 20)
@@ -170,10 +172,11 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
-        self.dict_db[0][self.title]['image'] = self.images_saved
-        self.db.save(self.dict_db)
-        self.parent.update_db()
-        self.parent.set_columns()  # update image icon in list view
+        if self.is_changing_image:
+            self.dict_db[0][self.title]['image'] = self.images_saved
+            self.db.save(self.dict_db)
+            self.parent.update_db()
+            self.parent.set_columns()  # update image icon in list view
         self.Destroy()
 
     def show_image_thumbs(self):
