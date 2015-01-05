@@ -293,7 +293,7 @@ class PhraseDialog(wx.Dialog):
             if yes_no_box.ShowModal() == wx.ID_YES:
                 del self.phrase_dict[selected_obj.phrase]
                 # del self.dict_db[1][selected_obj.phrase]
-                # not necessary because self.phrase_dict references to self.dict_db[1]
+                # not necessary because self.phrase_dict refers to self.dict_db[1]
                 self.db.save(self.dict_db)
                 self.view_phrases = [w for w in self.view_phrases if w.phrase != selected_obj.phrase]
                 self.dataOlv.SetObjects(self.view_phrases)
