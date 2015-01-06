@@ -368,6 +368,7 @@ class PhraseDialog(wx.Dialog):
             if open_dlg.ShowModal() == wx.ID_OK:
                 audio_file_path = open_dlg.GetPath()
                 ogg_file_path = AUDIO_DIR + selected_obj.phrase + OGG_EXTENSION
+                ogg_file_path = unicodedata.normalize('NFKD', ogg_file_path).encode('ascii', 'ignore')
                 convert_mp3_to_ogg(audio_file_path, ogg_file_path)
                 audio_content = convert_ogg_to_string(ogg_file_path)
                 tmp = self.dict_db[self.db_index][self.lang_index][selected_obj.phrase][:2]
@@ -386,7 +387,8 @@ class PhraseDialog(wx.Dialog):
         if len(self.dict_db[self.db_index][self.lang_index][phrase]) > 2:
             audio_str = self.dict_db[self.db_index][self.lang_index][phrase][2]
             path = AUDIO_DIR + phrase + OGG_EXTENSION
-            if not os.path.exists(path) and len(audio_str) > 0:
+            if not os.path.exists(unicodedata.normalize('NFKD', path).encode('ascii', 'ignore')) \
+                    and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
             p = Word(phrase)
             p.pronounce()
