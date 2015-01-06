@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import unicodedata
 import urllib
 import wx
 import pygame
@@ -64,15 +67,16 @@ class Audio(object):
         :return:
         """
         try:
-            if os.path.exists(self.ogg_path):
+            if os.path.exists(unicodedata.normalize('NFKD', self.ogg_path).encode('ascii', 'ignore')):
                 pygame.init()
                 clock = pygame.time.Clock()
-                pygame.mixer.music.load(self.ogg_path)
+                pygame.mixer.music.load(unicode(self.ogg_path))
                 pygame.mixer.music.play()
                 while pygame.mixer.music.get_busy():
                     clock.tick(1000)
         except:
             print "Can not play audio file"
+            raise
 
     def get_mixer_args(self):
         """

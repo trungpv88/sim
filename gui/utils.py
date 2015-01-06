@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import unicodedata
 import StringIO
 import base64
 import os.path
@@ -41,7 +44,7 @@ def convert_string_to_ogg(contents, path):
     :return:
     """
     app = base64.b64decode(contents)
-    f = open(path, 'wb')
+    f = open(unicodedata.normalize('NFKD', path).encode('ascii', 'ignore'), 'wb')
     f.write(app)
     f.close()
 
