@@ -3,6 +3,7 @@ import wx
 import thread
 import shutil
 from ObjectListView import ObjectListView, ColumnDefn
+from wx._windows_ import Dialog_ShowModal
 from word.word import Word
 from word.word_view import WordDisplay
 from dictionary.database import DataBase
@@ -133,6 +134,11 @@ class MainPanel(wx.Panel):
                 self.dict_db[0][new_word] = {}
                 # take definition from server using multi thread to increase speed
                 thread.start_new_thread(self.thread_word_definition, (new_word, w))
+            else:
+                msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim',
+                                 style=wx.OK | wx.ICON_EXCLAMATION)
+                msg_box.ShowModal()
+                msg_box.Destroy()
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
 
     def thread_word_definition(self, new_word, w):
