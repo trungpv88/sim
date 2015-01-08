@@ -3,7 +3,6 @@ import wx
 import thread
 import shutil
 from ObjectListView import ObjectListView, ColumnDefn
-from wx._windows_ import Dialog_ShowModal
 from word.word import Word
 from word.word_view import WordDisplay
 from dictionary.database import DataBase

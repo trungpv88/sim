@@ -1,7 +1,3 @@
-import wx
-import wx.calendar
-import wx.lib.calendar
-import wx.gizmos
 from test import TestDialog
 from cal import CalendarDialog
 from phrase import PhraseDialog

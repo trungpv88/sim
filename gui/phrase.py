@@ -233,6 +233,13 @@ class PhraseDialog(wx.Dialog):
         translate_table = dict((ord(char), u'') for char in u'/')
         return unicode_str.translate(translate_table)
 
+    @staticmethod
+    def convert_unicode_list(ls):
+        ls_unicode = []
+        for item in ls:
+            ls_unicode.append(unicodedata.normalize('NFKD', item).encode('ascii', 'ignore'))
+        return ls_unicode
+
     def add_phrase(self, e):
         """
         Event raises when add button is clicked
@@ -240,6 +247,7 @@ class PhraseDialog(wx.Dialog):
         :return:
         """
         phrase_box = wx.TextEntryDialog(None, 'Please enter a phrase/topic: ', 'Sim')
+        new_item = ''
         if phrase_box.ShowModal() == wx.ID_OK:
             new_item = phrase_box.GetValue().lower()  # remove forward slash (confuse with path)
             new_item = self.remove_char(new_item)
@@ -247,14 +255,21 @@ class PhraseDialog(wx.Dialog):
             phrase_box.Destroy()
             return
         phrase_box.Destroy()
-        if self.db_index == 1:
-            self.phrase_input_dlg(new_item)
+        if unicodedata.normalize('NFKD', new_item).encode('ascii', 'ignore') not in \
+                self.convert_unicode_list(self.dict_db[self.db_index][self.lang_index].keys()):
+            if self.db_index == 1:
+                self.phrase_input_dlg(new_item)
+            else:
+                self.topic_input_dlg(new_item)
+            self.db.save(self.dict_db)
+            self.get_phrases()
+            self.dataOlv.SetObjects(self.view_phrases)
+            self.update_nb_phrase()
         else:
-            self.topic_input_dlg(new_item)
-        self.db.save(self.dict_db)
-        self.get_phrases()
-        self.dataOlv.SetObjects(self.view_phrases)
-        self.update_nb_phrase()
+            msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
+            msg_box.ShowModal()
+            msg_box.Destroy()
+
 
     def phrase_input_dlg(self, new_phrase):
         """
