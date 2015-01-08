@@ -237,7 +237,7 @@ class PhraseDialog(wx.Dialog):
     def convert_unicode_list(ls):
         ls_unicode = []
         for item in ls:
-            ls_unicode.append(unicodedata.normalize('NFKD', item).encode('ascii', 'ignore'))
+            ls_unicode.append(unicodedata.normalize('NFKD', unicode(item)).encode('ascii', 'ignore'))
         return ls_unicode
 
     def add_phrase(self, e):
