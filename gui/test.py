@@ -1,4 +1,5 @@
 import wx
+from wx import gizmos
 import random
 import os.path
 from dictionary.database import DataBase
@@ -35,8 +36,8 @@ class TestDialog(wx.Dialog):
         self.end_date_picker = wx.DatePickerCtrl(self, -1, style=wx.DP_DROPDOWN, size=(130, 20))
         self.end_date = None
         self.words_date_range = wx.StaticText(self, -1, '0 words', size=(130, 20))
-        self.nb_words_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY, choices=['10', '20', '50', '100'],
-                                       size=(130, 20))
+        self.nb_words_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY,
+                                       choices=['10', '20', '50', '100', '200', '500', '1000'], size=(130, 20))
         self.nb_words = None
         self.delay_cb = wx.ComboBox(self, -1, value='10', style=wx.CB_READONLY, choices=['5', '10'], size=(130, 20))
         self.delay = None

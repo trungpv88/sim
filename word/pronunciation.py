@@ -67,7 +67,7 @@ class Audio(object):
         :return:
         """
         try:
-            if os.path.exists(unicodedata.normalize('NFKD', self.ogg_path).encode('ascii', 'ignore')):
+            if os.path.exists(unicodedata.normalize('NFKD', unicode(self.ogg_path)).encode('ascii', 'ignore')):
                 pygame.init()
                 clock = pygame.time.Clock()
                 pygame.mixer.music.load(unicode(self.ogg_path))
