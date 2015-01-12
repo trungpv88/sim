@@ -37,6 +37,7 @@ class Audio(object):
                 urllib.urlretrieve(self.audio_url, self.mp3_path)
         except:
             print "Can not connect to audio server."
+            raise
 
     def delete_mp3_file(self):
         """
@@ -60,6 +61,7 @@ class Audio(object):
             msg_dlg = wx.MessageDialog(None, 'Can not find the audio file on the server.', 'Sim',
                                        style=wx.OK | wx.ICON_EXCLAMATION)
             msg_dlg.ShowModal()
+            raise
 
     def play(self):
         """
@@ -98,3 +100,4 @@ class Audio(object):
             pygame.mixer.init(freq, size, chan, buffer_size)
         except:
             print "Can not initialize parameters for audio module."
+            raise
