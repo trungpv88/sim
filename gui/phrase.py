@@ -414,6 +414,9 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
+        thread.start_new_thread(self.thread_play_audio_file, ())
+
+    def thread_play_audio_file(self):
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             self.pronounce(selected_obj.phrase)
