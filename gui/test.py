@@ -124,12 +124,12 @@ class TestDialog(wx.Dialog):
         return words_date_range_sizer
 
     def create_combo_box(self, label, control):
-        '''
+        """
         Create combo box to select a value
         :param label:
         :param control:
         :return:
-        '''
+        """
         words_grid_sizer = wx.GridSizer(1, 2)
         words_label = wx.StaticText(self, -1, label, size=(110, 20))
         words_grid_sizer.Add(words_label, wx.ALIGN_CENTER_VERTICAL)

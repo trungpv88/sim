@@ -80,7 +80,8 @@ class Audio(object):
             print "Can not play audio file"
             raise
 
-    def get_mixer_args(self):
+    @staticmethod
+    def get_mixer_args():
         """
         Get arguments for audio module in pygame
         :return:
