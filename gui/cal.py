@@ -60,6 +60,7 @@ class CalendarDialog(wx.Dialog):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         date = self.calendar.GetDate()
         month = date.GetMonth() + 1
         year = date.GetYear()
@@ -78,6 +79,7 @@ class CalendarDialog(wx.Dialog):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         date = self.calendar.GetDate()
         year = date.GetYear()
         learnt_words = {}
@@ -94,6 +96,7 @@ class CalendarDialog(wx.Dialog):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         date = self.calendar.GetDate()
         day = date.GetDay()
         month = date.GetMonth() + 1
@@ -111,6 +114,7 @@ class CalendarDialog(wx.Dialog):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         for i in xrange(1, 31, 1):
             self.calendar.ResetAttr(i)
         date = self.calendar.GetDate()
@@ -135,6 +139,7 @@ class CalendarDialog(wx.Dialog):
             self.calendar.SetAttr(day=int(k), attr=highlight)
 
     def on_close(self, e):
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.Destroy()
 
 
@@ -165,6 +170,7 @@ class LineChartDialog(wx.Dialog):
         return count / y_cell
 
     def on_close(self, e):
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.Destroy()
 
 

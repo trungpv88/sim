@@ -15,22 +15,26 @@ class ToolBar(object):
         """
         Event raises when learning tracking button is clicked
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         CalendarDialog(self.parent, 'Learning Tracking')
 
     def test_vocabulary(self, e):
         """
         Event raises when test button is clicked
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         TestDialog(self.parent, 'Test Vocabulary')
 
     def view_phrases(self, e):
         """
         Event raises when when view phrases button is clicked
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         PhraseDialog(self.parent, 'Ordinary Phrases/Topics')
 
     def configure_server(self, e):
         """
         Event raises when server configuration button is clicked
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         ServerDialog(self.parent, 'View Configuration Servers')

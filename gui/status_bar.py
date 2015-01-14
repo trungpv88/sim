@@ -8,6 +8,7 @@ class StatusBar(wx.StatusBar):
     A class to design items on status bar
     """
     def __init__(self, parent):
+        # wx.StatusBar.__init__(self, parent, wx.ID_ANY)
         self.parent = parent
         self.status_bar = self.parent.CreateStatusBar()
         self.status_bar.SetFieldsCount(3)  # create 2 fields on status bar
@@ -56,6 +57,7 @@ class StatusBar(wx.StatusBar):
             urllib2.urlopen(GOOGLE_SERVER_IP, timeout=2)  # host of google
             return True
         except urllib2.URLError as err:
+            print err
             pass
         return False
 
@@ -65,6 +67,7 @@ class StatusBar(wx.StatusBar):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.update_network_status()
 
     def update_word_nb(self, nb):

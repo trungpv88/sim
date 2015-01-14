@@ -90,9 +90,10 @@ class MainPanel(wx.Panel):
         try:
             word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
             word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
+            return word_view.decode('utf-8')
         except:
-            return 'Error: cannot display the first definition of word.'
-        return word_view.decode('utf-8')
+            raise
+            # return 'Error: cannot display the first definition of word.'
 
     def saved_to_view_words(self):
         """
@@ -134,8 +135,7 @@ class MainPanel(wx.Panel):
                 # take definition from server using multi thread to increase speed
                 thread.start_new_thread(self.thread_word_definition, (new_word, w))
             else:
-                msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim',
-                                 style=wx.OK | wx.ICON_EXCLAMATION)
+                msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
                 msg_box.ShowModal()
                 msg_box.Destroy()
         self.set_columns()  # update 'sound' icon for new word displayed on overlay
@@ -156,7 +156,7 @@ class MainPanel(wx.Panel):
         except:
             dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
             dlg.ShowModal()
-            return
+            raise
         if word_def != '':
             # save definition to database and get it to display on overlay
             now = wx.DateTime.Now()
@@ -207,6 +207,7 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
         if name_box.ShowModal() == wx.ID_OK:
             new_word = name_box.GetValue().lower()
@@ -218,6 +219,7 @@ class MainPanel(wx.Panel):
         Event raises when play button is clicked
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             audio_str = self.dict_db[0][selected_obj.value].get('audio', '')
@@ -233,6 +235,7 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             word_def = ""
@@ -247,6 +250,7 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             yes_no_box = wx.MessageDialog(None, 'Are you sure you want to delete this word?', 'Sim',  wx.YES_NO)
