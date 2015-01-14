@@ -10,12 +10,14 @@ class BaseModel(object):
     def __init__(self, path):
         self.path = path
 
-    def save(self, obj=dict()):
+    def save(self, obj=None):
         """
         Save data under dictionary type to database
         :param obj:
         :return:
         """
+        if obj is None:
+            obj = []
         with open(self.path, 'wb') as f:
             pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 

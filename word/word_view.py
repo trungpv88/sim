@@ -93,7 +93,8 @@ class WordDisplay(wx.Dialog):
         :return:
         """
         description_image_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.thumbnails.ShowFileNames(False)
+        getattr(self.thumbnails, "ShowFileNames")(False)
+        # self.thumbnails._scrolled.ShowFileNames(False)
         self.show_image_thumbs()
         change_image_btn = wx.Button(self, -1, 'Get randomly word description images from Google')
         change_image_btn.Bind(wx.EVT_BUTTON, self.change_description_images)
@@ -107,6 +108,7 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.is_changing_image = True
         self.images_saved = []
         # select images in 20 first result images from google search
@@ -177,6 +179,7 @@ class WordDisplay(wx.Dialog):
             self.db.save(self.dict_db)
             self.parent.update_db()
             self.parent.set_columns()  # update image icon in list view
+        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.Destroy()
 
     def show_image_thumbs(self):
@@ -186,5 +189,6 @@ class WordDisplay(wx.Dialog):
         :return:
         """
         if os.path.exists(self.word_images_directory):
-            self.thumbnails.ShowDir(self.word_images_directory)
+            getattr(self.thumbnails, "ShowDir")(self.word_images_directory)
+            # self.thumbnails.ShowDir(self.word_images_directory)
             shutil.rmtree(self.word_images_directory)
