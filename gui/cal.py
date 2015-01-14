@@ -2,6 +2,7 @@ import wx
 import wx.calendar
 from dictionary.database import DataBase
 from calendar import monthrange, isleap
+from sound import play_closing_sound
 
 
 class CalendarDialog(wx.Dialog):
@@ -140,6 +141,10 @@ class CalendarDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        try:
+            play_closing_sound()
+        except:
+            raise
         self.Destroy()
 
 

@@ -7,6 +7,7 @@ from ObjectListView import ObjectListView, ColumnDefn
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import *
 from dictionary.database import DataBase
+from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound
 
 
 class Phrase(object):
@@ -453,5 +454,9 @@ class PhraseDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        try:
+            play_closing_sound()
+        except:
+            raise
         self.parent.panel.update_db()
         self.Destroy()

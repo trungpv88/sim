@@ -9,6 +9,7 @@ from dictionary.database import DataBase
 from gui.utils import convert_image_to_string, convert_string_to_image
 import shutil
 import thread
+from gui.sound import play_closing_sound
 GOOGLE_IMAGE_SERVER = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:'
 IMAGE_PATH_FORMAT = '%s/%s.jpg'
 
@@ -180,6 +181,10 @@ class WordDisplay(wx.Dialog):
             self.parent.update_db()
             self.parent.set_columns()  # update image icon in list view
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        try:
+            play_closing_sound()
+        except:
+            raise
         self.Destroy()
 
     def show_image_thumbs(self):

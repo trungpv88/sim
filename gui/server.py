@@ -1,6 +1,7 @@
 import wx
 from word.pronunciation import DICT_URL, GG_SEARCH_URL
 from word.word_view import GOOGLE_IMAGE_SERVER
+from sound import play_closing_sound
 
 
 class ServerDialog(wx.Dialog):
@@ -47,4 +48,8 @@ class ServerDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        try:
+            play_closing_sound()
+        except:
+            raise
         self.Destroy()

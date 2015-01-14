@@ -8,6 +8,7 @@ from word.word_view import WordDisplay
 from dictionary.database import DataBase
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import DATE_FORMAT, convert_string_to_ogg
+from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound
 
 
 class WordView(object):
@@ -212,6 +213,10 @@ class MainPanel(wx.Panel):
         if name_box.ShowModal() == wx.ID_OK:
             new_word = name_box.GetValue().lower()
             self.add_new_data(new_word)
+            try:
+                play_message_sound()
+            except:
+                raise
         name_box.Destroy()
 
     def play_pronunciation(self, e):
@@ -241,6 +246,10 @@ class MainPanel(wx.Panel):
             word_def = ""
             for line in self.word_definition[selected_obj.value]:
                 word_def += line.decode('utf-8') + '\n'
+            try:
+                play_opening_sound()
+            except:
+                raise
             word_view = WordDisplay(self, selected_obj.value.upper(), word_def)
             word_view.ShowModal()
 

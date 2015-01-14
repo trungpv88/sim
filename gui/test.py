@@ -7,6 +7,7 @@ from utils import DATE_FORMAT, HIT_TEXT_DEFAULT
 from word.word import Word
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import convert_string_to_ogg
+from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound
 
 
 class TestDialog(wx.Dialog):
@@ -221,7 +222,7 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        # print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         start_date = self.start_date_picker.GetValue()
         start_date = start_date.Format(DATE_FORMAT)
         end_date = self.end_date_picker.GetValue()
@@ -293,7 +294,7 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         # when all the test word is pronounced
         if self.current_word_pos >= len(self.test_words):
             self.finish_all_test()
@@ -356,5 +357,9 @@ class TestDialog(wx.Dialog):
         :return:
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        try:
+            play_closing_sound()
+        except:
+            raise
         self.timer.Destroy()
         self.Destroy()
