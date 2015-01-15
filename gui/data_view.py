@@ -94,7 +94,7 @@ class MainPanel(wx.Panel):
         :return:
         """
         try:
-            word_view = ' '.join(word[0].split()[1:15])  # get 15 first words in definition
+            word_view = ' '.join(word[0].split()[1:7])  # get 7 first words in definition
             word_view = word_view.translate(None, '.,') + ' ...'  # remove punctuations
             return word_view.decode('utf-8')
         except:
@@ -205,8 +205,8 @@ class MainPanel(wx.Panel):
             ColumnDefn('Date', 'left', 100, 'date'),
             ColumnDefn('Word', 'left', 100, 'value'),
             ColumnDefn('Line breaks', 'left', 100, 'line_breaks'),
-            ColumnDefn('Pronunciation', 'left', 100, 'pronunciation'),
-            ColumnDefn('Definition', 'left', 300, 'definition'),
+            ColumnDefn('Pronunciation', 'left', 120, 'pronunciation'),
+            ColumnDefn('Definition', 'left', 280, 'definition'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=sound_getter),
             ColumnDefn('', 'center', 20, 'image', imageGetter=image_getter)
         ])
