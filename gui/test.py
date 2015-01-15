@@ -7,7 +7,7 @@ from utils import DATE_FORMAT, HIT_TEXT_DEFAULT
 from word.word import Word
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import convert_string_to_ogg
-from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound
+from sound import play_closing_sound
 
 
 class TestDialog(wx.Dialog):
@@ -357,9 +357,6 @@ class TestDialog(wx.Dialog):
         :return:
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_closing_sound()
-        except:
-            raise
+        play_closing_sound()
         self.timer.Destroy()
         self.Destroy()

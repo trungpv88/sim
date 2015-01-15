@@ -2,7 +2,7 @@ import wx
 import wx.calendar
 from dictionary.database import DataBase
 from calendar import monthrange, isleap
-from sound import play_closing_sound
+from sound import play_closing_sound, play_opening_sound
 
 
 class CalendarDialog(wx.Dialog):
@@ -22,6 +22,7 @@ class CalendarDialog(wx.Dialog):
         self.show_learnt_date(today.GetMonth() + 1, today.GetYear())
         self.design_interface()
         self.ShowModal()
+        play_closing_sound()
 
     def get_date(self):
         """
@@ -141,10 +142,6 @@ class CalendarDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_closing_sound()
-        except:
-            raise
         self.Destroy()
 
 
@@ -165,7 +162,9 @@ class LineChartDialog(wx.Dialog):
         line_box.Add(total_word_lbl, 0, wx.CENTER, 10)
         line_box.Add(close_btn, 0, wx.BOTTOM | wx.ALIGN_CENTER, 10)
         self.SetSizer(line_box)
+        play_opening_sound()
         self.ShowModal()
+        play_closing_sound()
 
     @staticmethod
     def count_total_word(data, y_cell):

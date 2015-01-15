@@ -12,6 +12,7 @@ class ServerDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title,  size=(600, 150))
         self.dialog_design()
         self.ShowModal()
+        play_closing_sound()
 
     def dialog_design(self):
         """
@@ -48,8 +49,4 @@ class ServerDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_closing_sound()
-        except:
-            raise
         self.Destroy()

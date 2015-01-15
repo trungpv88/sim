@@ -268,6 +268,7 @@ class PhraseDialog(wx.Dialog):
             self.get_phrases()
             self.dataOlv.SetObjects(self.view_phrases)
             self.update_nb_phrase()
+            play_message_sound()
         else:
             msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
             msg_box.ShowModal()
@@ -287,6 +288,7 @@ class PhraseDialog(wx.Dialog):
                 today = now.Format(DATE_FORMAT)
                 self.phrase_dict[new_phrase] = [meaning, today]
                 self.dict_db[self.db_index][self.lang_index][new_phrase] = [meaning, today]
+
         meaning_box.Destroy()
 
     def topic_input_dlg(self, new_topic):
@@ -316,6 +318,7 @@ class PhraseDialog(wx.Dialog):
                 self.view_phrases = [w for w in self.view_phrases if w.phrase != selected_obj.phrase]
                 self.dataOlv.SetObjects(self.view_phrases)
                 self.update_nb_phrase()
+                play_buzz_sound()
             yes_no_box.Destroy()
 
     def update_overlay(self):
@@ -335,6 +338,7 @@ class PhraseDialog(wx.Dialog):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         choose_language = wx.SingleChoiceDialog(None, 'Choose your learning language:', 'Language',
                                                 ['English', 'French'])
+        play_opening_sound()
         if choose_language.ShowModal() == wx.ID_OK:
             lang = choose_language.GetStringSelection()
             if lang == 'English':
@@ -344,6 +348,7 @@ class PhraseDialog(wx.Dialog):
             if self.lang_index != lang_index:
                 self.lang_index = lang_index
                 self.update_overlay()
+        play_closing_sound()
         choose_language.Destroy()
 
     def change_mode(self, e):
@@ -353,6 +358,7 @@ class PhraseDialog(wx.Dialog):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         choose_mode = wx.SingleChoiceDialog(None, 'Choose your learning mode:', 'Mode',
                                             ['Phrase', 'Topic'])
+        play_opening_sound()
         if choose_mode.ShowModal() == wx.ID_OK:
             mode = choose_mode.GetStringSelection()
             if mode == 'Phrase':
@@ -362,6 +368,7 @@ class PhraseDialog(wx.Dialog):
             if self.db_index != mode_index:
                 self.db_index = mode_index
                 self.update_overlay()
+        play_closing_sound()
         choose_mode.Destroy()
 
     def view_edit_content(self, e):
@@ -374,7 +381,9 @@ class PhraseDialog(wx.Dialog):
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             content_dlg = ContentDialog(self, selected_obj.phrase, selected_obj.meaning)
+            play_opening_sound()
             content_dlg.ShowModal()
+            play_closing_sound()
 
     def add_audio_file(self, e):
         """
@@ -454,9 +463,6 @@ class PhraseDialog(wx.Dialog):
 
     def on_close(self, e):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_closing_sound()
-        except:
-            raise
+        play_closing_sound()
         self.parent.panel.update_db()
         self.Destroy()

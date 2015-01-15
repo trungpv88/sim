@@ -17,10 +17,7 @@ class ToolBar(object):
         Event raises when learning tracking button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_opening_sound()
-        except:
-            raise
+        play_opening_sound()
         CalendarDialog(self.parent, 'Learning Tracking')
 
     def test_vocabulary(self, e):
@@ -28,10 +25,7 @@ class ToolBar(object):
         Event raises when test button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_opening_sound()
-        except:
-            raise
+        play_opening_sound()
         TestDialog(self.parent, 'Test Vocabulary')
 
     def view_phrases(self, e):
@@ -39,10 +33,7 @@ class ToolBar(object):
         Event raises when when view phrases button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_opening_sound()
-        except:
-            raise
+        play_opening_sound()
         PhraseDialog(self.parent, 'Ordinary Phrases/Topics')
 
     def configure_server(self, e):
@@ -50,8 +41,5 @@ class ToolBar(object):
         Event raises when server configuration button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_opening_sound()
-        except:
-            raise
+        play_opening_sound()
         ServerDialog(self.parent, 'View Configuration Servers')

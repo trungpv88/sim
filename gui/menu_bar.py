@@ -75,7 +75,7 @@ class MenuBar(object):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         yes_no_box = wx.MessageDialog(None, 'Are you sure you want to quit this application?', 'Sim',  wx.YES_NO)
         if yes_no_box.ShowModal() == wx.ID_YES:
             self.parent.Close()

@@ -181,10 +181,7 @@ class WordDisplay(wx.Dialog):
             self.parent.update_db()
             self.parent.set_columns()  # update image icon in list view
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        try:
-            play_closing_sound()
-        except:
-            raise
+        play_closing_sound()
         self.Destroy()
 
     def show_image_thumbs(self):

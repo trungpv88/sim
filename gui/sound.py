@@ -1,29 +1,30 @@
 import pygame
 import thread
+import os.path
 
 
 def play_closing_sound():
-    path = "sound/door.ogg"
-    thread_play(path)
+    thread_play("sound/door.ogg")
 
 
 def play_opening_sound():
-    path = 'sound/knock.ogg'
-    thread_play(path)
+    thread_play("sound/knock.ogg")
 
 
 def play_buzz_sound():
-    path = 'sound/doorbell.ogg'
-    thread_play(path)
+    thread_play("sound/doorbell.ogg")
 
 
 def play_message_sound():
-    path = 'sound/chimeup.ogg'
-    thread_play(path)
+    thread_play("sound/chimeup.ogg")
 
 
 def thread_play(path):
-    thread.start_new_thread(play, (path,))
+    try:
+        if os.path.exists(path):
+            thread.start_new_thread(play, (path,))
+    except:
+        raise
 
 
 def play(path):
@@ -42,7 +43,7 @@ def play(path):
 
 def get_mixer_args():
     """
-    Get arguments for audio module in pygame
+    Get arguments for audio module
     :return:
     """
     pygame.mixer.init()
@@ -52,7 +53,7 @@ def get_mixer_args():
 
 def init_mixer():
     """
-    Initialize parameters for audio module in pygame
+    Initialize parameters for audio module
     :return:
     """
     try:
