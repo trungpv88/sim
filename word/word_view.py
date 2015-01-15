@@ -112,8 +112,8 @@ class WordDisplay(wx.Dialog):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.is_changing_image = True
         self.images_saved = []
-        # select images in 20 first result images from google search
-        rnd_number = randint(0, 20)
+        # select images in 50 first result images from google search
+        rnd_number = randint(0, 50)
         url = ('https://ajax.googleapis.com/ajax/services/search/images?' + 'v=1.0&q=' + self.title +
                '&start=' + str(rnd_number) + '&userip=MyIP')
         request = urllib2.Request(url)
