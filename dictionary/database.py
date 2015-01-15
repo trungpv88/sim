@@ -59,14 +59,17 @@ class DataBase(BaseModel):
         line_num = 1
         for line in lines:
             if line is not '':
-                normal_line = line.replace(':', '.')  # replace last character from ':' to '.'
-                # upper first character and insert space at the beginning of line
-                if normal_line[0] is not ' ':
-                    normal_line = ' ' + normal_line[0].upper() + normal_line[1:]
+                if line_num < 3:
+                    normal_lines.append(line)
                 else:
-                    normal_line = normal_line[0] + normal_line[1].upper() + normal_line[2:]
-                # insert definition number at beginning of line
-                normal_line = str(line_num) + '.' + normal_line
-                normal_lines.append(normal_line)
+                    normal_line = line.replace(':', '.')  # replace last character from ':' to '.'
+                    # upper first character and insert space at the beginning of line
+                    if normal_line[0] is not ' ':
+                        normal_line = ' ' + normal_line[0].upper() + normal_line[1:]
+                    else:
+                        normal_line = normal_line[0] + normal_line[1].upper() + normal_line[2:]
+                    # insert definition number at beginning of line
+                    normal_line = str(line_num - 2) + '.' + normal_line
+                    normal_lines.append(normal_line)
                 line_num += 1
         return normal_lines

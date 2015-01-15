@@ -15,10 +15,12 @@ class WordView(object):
     """
     A class for displaying word data
     """
-    def __init__(self, w_value, w_definition, w_date):
+    def __init__(self, w_value, w_definition, w_date, w_line_breaks='', w_pronunciation=''):
         self.date = w_date
         self.value = w_value
         self.definition = w_definition
+        self.line_breaks = w_line_breaks
+        self.pronunciation = w_pronunciation
 
 
 class MainPanel(wx.Panel):
@@ -46,6 +48,9 @@ class MainPanel(wx.Panel):
         self.SetSizer(main_sizer)
         self.view_data()
         self.status_bar.update_word_nb(len(self.view_words))
+        #
+        # for w, d in self.dict_db[0].items():
+        #     print self.dict_db[0][w]['definition']
 
     def new_panel(self):
         """
@@ -85,7 +90,7 @@ class MainPanel(wx.Panel):
     def normalize_view_def(word):
         """
         Take the first definition of word to display on overlay
-        :param word:
+        :param word: ['line breaks', 'pronunciation', 'definition']
         :return:
         """
         try:
@@ -103,8 +108,10 @@ class MainPanel(wx.Panel):
         :return:
         """
         for k, v in self.word_definition.items():
+            # v = ['line_breaks', 'pronunciation', 'def1', 'def2']
             if self.word_date[k] != '':
-                tmp_obj = WordView(k, self.normalize_view_def(v), self.word_date[k])
+                view_def = self.normalize_view_def(v[2:])
+                tmp_obj = WordView(k, view_def, self.word_date[k], v[0].decode('utf-8'), v[1].decode('utf-8'))
                 self.view_words.append(tmp_obj)
             else:
                 # delete error words
@@ -163,7 +170,7 @@ class MainPanel(wx.Panel):
             now = wx.DateTime.Now()
             today = now.Format(DATE_FORMAT)
             saved_def = DataBase.normalize_saved_def(word_def)
-            view_def = self.normalize_view_def(saved_def)
+            view_def = self.normalize_view_def(saved_def[2:])
             self.word_definition[new_word] = saved_def
             self.dict_db[0][new_word]['definition'] = saved_def
             self.dict_db[0][new_word]['date'] = today
@@ -172,7 +179,8 @@ class MainPanel(wx.Panel):
             self.dict_db[0][new_word]['audio'] = audio_str
             self.db.save(self.dict_db)
             # display definition on overlay
-            self.view_words.append(WordView(new_word, view_def, today))
+            self.view_words.append(WordView(new_word, view_def, today,
+                                            saved_def[0].decode('utf-8'), saved_def[1].decode('utf-8')))
             self.view_words.sort(key=lambda word: (word.date, word.value), reverse=True)
             self.dataOlv.SetObjects(self.view_words)
             self.status_bar.update_word_nb(len(self.view_words))
@@ -196,7 +204,9 @@ class MainPanel(wx.Panel):
         self.dataOlv.SetColumns([
             ColumnDefn('Date', 'left', 100, 'date'),
             ColumnDefn('Word', 'left', 100, 'value'),
-            ColumnDefn('Definition', 'left', 500, 'definition'),
+            ColumnDefn('Line breaks', 'left', 100, 'line_breaks'),
+            ColumnDefn('Pronunciation', 'left', 100, 'pronunciation'),
+            ColumnDefn('Definition', 'left', 300, 'definition'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=sound_getter),
             ColumnDefn('', 'center', 20, 'image', imageGetter=image_getter)
         ])
@@ -240,11 +250,14 @@ class MainPanel(wx.Panel):
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
+            word_line_breaks = self.word_definition[selected_obj.value][0]
+            word_pronunciation = self.word_definition[selected_obj.value][1]
             word_def = ""
-            for line in self.word_definition[selected_obj.value]:
+            for line in self.word_definition[selected_obj.value][2:]:
                 word_def += line.decode('utf-8') + '\n'
             play_opening_sound()
-            word_view = WordDisplay(self, selected_obj.value.upper(), word_def)
+            # print word_def
+            word_view = WordDisplay(self, selected_obj.value.upper(), word_line_breaks, word_pronunciation, word_def)
             word_view.ShowModal()
 
     def delete_word(self, e):

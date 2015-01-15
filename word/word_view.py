@@ -18,7 +18,7 @@ class WordDisplay(wx.Dialog):
     """
     A class to display word information including definitions and description images
     """
-    def __init__(self, parent, title, content):
+    def __init__(self, parent, title, line_breaks, pronunciation, content):
         super(WordDisplay, self).__init__(parent, wx.ID_ANY, 'Definition of ' + title)
         self.parent = parent
         self.is_running = True
@@ -27,6 +27,8 @@ class WordDisplay(wx.Dialog):
         if not os.path.exists(self.word_images_directory):
             os.makedirs(self.word_images_directory)
         self.title = title.lower()
+        self.line_breaks = line_breaks
+        self.pronunciation = pronunciation
         self.db = DataBase()
         self.dict_db = self.db.load()
         self.word_image = {}
@@ -82,11 +84,20 @@ class WordDisplay(wx.Dialog):
         Create word title on top of dialog
         :return:
         """
+        title_sizer = wx.BoxSizer(wx.VERTICAL)
         word_title = wx.StaticText(self, wx.ID_ANY, self.title.upper(), style=wx.ALIGN_CENTER_HORIZONTAL)
         word_title.SetForegroundColour(wx.Colour(255, 0, 0))
         font = wx.Font(18, wx.ROMAN, wx.NORMAL, wx.BOLD)
         word_title.SetFont(font)
-        return word_title
+        word_pronunciation_text = self.line_breaks.decode('utf-8') + " - " + self.pronunciation.decode('utf-8')
+        word_pronunciation = wx.StaticText(self, wx.ID_ANY, word_pronunciation_text,
+                                           style=wx.ALIGN_CENTER_HORIZONTAL)
+        word_pronunciation.SetForegroundColour(wx.Colour(0, 0, 255))
+        font = wx.Font(10, wx.ROMAN, wx.NORMAL, wx.BOLD)
+        word_pronunciation.SetFont(font)
+        title_sizer.Add(word_title, 1, wx.EXPAND | wx.ALL, 2)
+        title_sizer.Add(word_pronunciation, 1, wx.EXPAND | wx.ALL, 2)
+        return title_sizer
 
     def create_description_image(self):
         """

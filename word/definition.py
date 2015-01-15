@@ -9,6 +9,7 @@ class DefParser(SGMLParser):
     """
     def __init__(self, verbose=0):
         SGMLParser.__init__(self, verbose)
+        self.div_nb = 0
         self.data = ""
         self.buffer = None
 
@@ -28,7 +29,7 @@ class DefParser(SGMLParser):
         :param att:
         :return:
         """
-        span = [v for k, v in att if k == 'class' and v == 'definition']
+        span = [v for k, v in att if k == 'class' and (v == 'definition' or v == 'linebreaks')]
         if span:
             self.buffer = ""
 
@@ -40,3 +41,28 @@ class DefParser(SGMLParser):
         if self.buffer is not None:
             self.data += self.buffer + '\n'
         self.buffer = None
+
+    def start_div(self, att=None):
+        """
+        Get data inside the 'div' tag with attribute class='headpron'.
+        This tag contains the definition of word.
+        :param att:
+        :return:
+        """
+        div = [v for k, v in att if k == 'class' and v == 'headpron']
+        if div:
+            self.buffer = ""
+
+    def end_div(self):
+        """
+        Finish reading data at the end of 'div' tag
+        :return:
+        """
+        if self.buffer is not None:
+            self.div_nb += 1
+            # <div class ="headpron"> contains another <div> tag
+            if self.div_nb == 2:
+                self.buffer = self.buffer.translate(None, ' \n')
+                self.buffer = self.buffer.replace("Pronunciation:", '')
+                self.data += self.buffer + '\n'
+                self.buffer = None
