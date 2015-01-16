@@ -159,34 +159,36 @@ class MainPanel(wx.Panel):
             self.is_running_thread = False
             thread.exit()
             return
-        try:
-            word_def = w.get_definition()
-        except:
-            dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
-            dlg.ShowModal()
-            raise
-        if word_def != '':
-            # save definition to database and get it to display on overlay
-            now = wx.DateTime.Now()
-            today = now.Format(DATE_FORMAT)
-            saved_def = DataBase.normalize_saved_def(word_def)
-            view_def = self.normalize_view_def(saved_def[2:])
-            self.word_definition[new_word] = saved_def
-            self.dict_db[0][new_word]['definition'] = saved_def
-            self.dict_db[0][new_word]['date'] = today
-            # get word pronunciation from server and update 'sound' icon on overlay
-            audio_str = w.get_pronunciation()
-            self.dict_db[0][new_word]['audio'] = audio_str
-            self.db.save(self.dict_db)
-            # display definition on overlay
-            self.view_words.append(WordView(new_word, view_def, today,
-                                            saved_def[0].decode('utf-8'), saved_def[1].decode('utf-8')))
-            self.view_words.sort(key=lambda word: (word.date, word.value), reverse=True)
-            self.dataOlv.SetObjects(self.view_words)
-            self.status_bar.update_word_nb(len(self.view_words))
-        self.is_running_thread = False
-        play_message_sound()
-        thread.exit()
+        word_def = ''
+        while word_def == '':
+            try:
+                word_def = w.get_definition()
+            except:
+                dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
+                dlg.ShowModal()
+                raise
+            if word_def != '':
+                # save definition to database and get it to display on overlay
+                now = wx.DateTime.Now()
+                today = now.Format(DATE_FORMAT)
+                saved_def = DataBase.normalize_saved_def(word_def)
+                view_def = self.normalize_view_def(saved_def[2:])
+                self.word_definition[new_word] = saved_def
+                self.dict_db[0][new_word]['definition'] = saved_def
+                self.dict_db[0][new_word]['date'] = today
+                # get word pronunciation from server and update 'sound' icon on overlay
+                audio_str = w.get_pronunciation()
+                self.dict_db[0][new_word]['audio'] = audio_str
+                self.db.save(self.dict_db)
+                # display definition on overlay
+                self.view_words.append(WordView(new_word, view_def, today,
+                                                saved_def[0].decode('utf-8'), saved_def[1].decode('utf-8')))
+                self.view_words.sort(key=lambda word: (word.date, word.value), reverse=True)
+                self.dataOlv.SetObjects(self.view_words)
+                self.status_bar.update_word_nb(len(self.view_words))
+                play_message_sound()
+            self.is_running_thread = False
+            thread.exit()
 
     def set_columns(self):
         """

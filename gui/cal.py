@@ -73,7 +73,7 @@ class CalendarDialog(wx.Dialog):
         for k, v in self.word_date.items():
             if v[0:7] == month_year:
                 learnt_words[(int(v[8:10]) - 1) * 10] += 10
-        LineChartDialog(self, 'Sim', month_year, learnt_words, 31, 21, 10, 10, monthrange(int(year), int(month))[1])
+        LineChartDialog(self, 'Sim', month_year, learnt_words, 31, 31, 10, 10, monthrange(int(year), int(month))[1])
 
     def show_year_chart(self, e):
         """
@@ -90,7 +90,7 @@ class CalendarDialog(wx.Dialog):
         for k, v in self.word_date.items():
             if v[0:4] == str(year):
                 learnt_words[(int(v[5:7]) - 1) * 25] += 1
-        LineChartDialog(self, 'Sim', str(year), learnt_words, 12, 21, 25, 1, 365 + int(isleap(int(year))))
+        LineChartDialog(self, 'Sim', str(year), learnt_words, 12, 31, 25, 1, 365 + int(isleap(int(year))))
 
     def on_date_selected(self, e):
         """
@@ -150,7 +150,7 @@ class LineChartDialog(wx.Dialog):
     Reference: http://zetcode.com/wxpython/gdi/
     """
     def __init__(self, parent, title, chart_title, data, x_range, y_range, x_cell, y_cell, days):
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(400, 360))
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(400, 450))
         line_box = wx.BoxSizer(wx.VERTICAL)
         close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
@@ -192,7 +192,7 @@ class LineChart(wx.Panel):
 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
-        dc.SetDeviceOrigin(40, 240)
+        dc.SetDeviceOrigin(40, 340)
         dc.SetAxisOrientation(True, True)
         dc.SetPen(wx.Pen('WHITE'))
         dc.DrawRectangle(1, 1, (self.x_range - 1) * 10, (self.y_range - 1) * self.y_cell)
@@ -214,7 +214,7 @@ class LineChart(wx.Panel):
         dc.DrawLine(1, 1, (self.x_range - 1) * self.x_cell, 1)
         dc.DrawLine(1, 1, 1, (self.y_range - 1) * 10)
         # y axis
-        for i in range(20, 220, 20):
+        for i in range(20, 320, 20):
             dc.DrawText(str(i/self.y_cell), -30, i+5)
             dc.DrawLine(2, i, -5, i)
         font.SetPointSize(5)
@@ -249,7 +249,7 @@ class LineChart(wx.Panel):
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
         dc.DrawText('%s words in %s (%.4f w/d)' % (self.total_words, self.chart_title,
-                                                   float(self.total_words) / self.nb_days), 90, 235)
+                                                   float(self.total_words) / self.nb_days), 60, 335)
 
     def draw_data(self, dc):
         """
