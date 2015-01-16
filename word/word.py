@@ -1,3 +1,11 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Get word pronunciation and definition
+
 import urllib2
 import wx
 import os.path

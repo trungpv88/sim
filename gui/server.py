@@ -1,3 +1,11 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Show information about definition, pronunciation and image servers
+
 import wx
 from word.pronunciation import DICT_URL, GG_SEARCH_URL
 from word.word_view import GOOGLE_IMAGE_SERVER

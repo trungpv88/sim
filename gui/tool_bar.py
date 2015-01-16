@@ -1,3 +1,11 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Handle some clicked buttons event on tool bar
+
 from test import TestDialog
 from cal import CalendarDialog
 from phrase import PhraseDialog

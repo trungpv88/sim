@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Show learnt words number on the left of the status bar
+# - Show internet connection state on the right of the status bar
+
 import wx
 import urllib2
 GOOGLE_SERVER_IP = 'http://74.125.228.100'

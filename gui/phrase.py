@@ -1,3 +1,18 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#             - Add and change the selected word/phrase/sentence pronunciation
+#             - Change learning language (English and French)
+#             - Play the pronunciation list at random
+#----------------------------------------------------------------------------
+# Goal:
+# - Take note about learnt words/phrases/sentences
+# - Add, edit and delete a word/phrase/sentence
+# - Add and change the selected word/phrase/sentence pronunciation
+# - Change learning language (English and French)
+# - Play the pronunciation list at random
+
 import wx
 import random
 import time

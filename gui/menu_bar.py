@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Handle about, help and quit clicked button event
+# - Manipulate database: new, open, save
+
 import wx
 import wx.html as html
 import shutil

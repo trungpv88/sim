@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Handle pronunciation word from sever
 
 import unicodedata
 import urllib

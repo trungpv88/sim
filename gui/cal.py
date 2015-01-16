@@ -1,3 +1,13 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#             - Change calendar size and content
+#----------------------------------------------------------------------------
+# Goal:
+# - Tracking learning period by plot learnt word number on graph
+
+
 import wx
 import wx.calendar
 from dictionary.database import DataBase

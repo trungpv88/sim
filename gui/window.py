@@ -1,3 +1,11 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Handle some clicked buttons event on menu bar
+
 import wx
 from data_view import MainPanel
 from tool_bar import ToolBar
@@ -14,6 +22,7 @@ class WindowManager(wx.Frame):
         super(WindowManager, self).__init__(parent, title=title, size=(800, 600),
                                             style=wx.MINIMIZE_BOX | wx.CLOSE_BOX | wx.CAPTION | wx.SYSTEM_MENU)
         # self.SetIcon(wx.Icon('icon/app-logo.ico'))
+        self.Bind(wx.EVT_CLOSE, self.on_close)
         self.CenterOnScreen()
         self.status_bar = StatusBar(self)
         self.panel = MainPanel(self, self.status_bar)
@@ -105,3 +114,13 @@ class WindowManager(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.tool_bar.test_vocabulary, test_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.view_phrases, phrase_tool_btn)
         self.Bind(wx.EVT_TOOL, self.tool_bar.configure_server, setting_tool_btn)
+
+    def on_close(self, e):
+        """
+        Wait some seconds before close form to terminate all thread process
+        :param e:
+        :return:
+        """
+        yes_no_box = wx.MessageDialog(None, 'Are you sure you want to quit this application?', 'Sim',  wx.YES_NO)
+        if yes_no_box.ShowModal() == wx.ID_YES:
+            self.Destroy()

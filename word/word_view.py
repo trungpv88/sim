@@ -1,3 +1,13 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#             - Add word line breaks and pronunciation
+#----------------------------------------------------------------------------
+# Goal:
+# - Show some word information: line breaks, pronunciation and definitions
+# - Fetch automatically at random some description word images from google
+
 import wx
 import wx.lib.agw.thumbnailctrl as tc
 from urllib import FancyURLopener

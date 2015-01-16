@@ -1,3 +1,14 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#             - Add line breaks and pronunciation word to list view
+#----------------------------------------------------------------------------
+# Goal:
+# - Display all learnt words on a list view
+# - Add, delete and view a selected word
+
+
 import os.path
 import wx
 import thread
@@ -48,9 +59,6 @@ class MainPanel(wx.Panel):
         self.SetSizer(main_sizer)
         self.view_data()
         self.status_bar.update_word_nb(len(self.view_words))
-        #
-        # for w, d in self.dict_db[0].items():
-        #     print self.dict_db[0][w]['definition']
 
     def new_panel(self):
         """
@@ -108,7 +116,6 @@ class MainPanel(wx.Panel):
         :return:
         """
         for k, v in self.word_definition.items():
-            # v = ['line_breaks', 'pronunciation', 'def1', 'def2']
             if self.word_date[k] != '':
                 view_def = self.normalize_view_def(v[2:])
                 tmp_obj = WordView(k, view_def, self.word_date[k], v[0].decode('utf-8'), v[1].decode('utf-8'))

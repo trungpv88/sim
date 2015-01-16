@@ -1,5 +1,18 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2014/12/24  - Version 1.0
+# 2015/01/16  - Version 1.1
+#             - Change result detail screen
+#----------------------------------------------------------------------------
+# Goal:
+# - Test user's memory by a learnt words test
+# - Before test: choose start/end date, the test words number and the time interval for each listening word
+# - In test: enter a word that user heard to a text box, the correct word will appear at that last second
+# - After test: display the result with highlight words (blue for True and red for False)
+
 import wx
 from wx import gizmos
+import wx.richtext
 import random
 import os.path
 from dictionary.database import DataBase
@@ -7,7 +20,7 @@ from utils import DATE_FORMAT, HIT_TEXT_DEFAULT
 from word.word import Word
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import convert_string_to_ogg
-from sound import play_closing_sound
+from sound import play_closing_sound, play_opening_sound
 
 
 class TestDialog(wx.Dialog):
@@ -276,6 +289,7 @@ class TestDialog(wx.Dialog):
                                                  float(self.word_hit)/float(self.word_count)))
         self.current_word_pos += 1
         # reset the answer word label
+        self.listen_word.SetValue('')
         self.answer_text.SetLabel('---')
 
     def finish_all_test(self):
@@ -327,11 +341,13 @@ class TestDialog(wx.Dialog):
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         result_detail = 'Answer - Listen\n'
+        # only show result when finishing test
         if len(self.answer_words) == len(self.test_words):
+            Result(self, self.answer_words, self.test_words)
             for i in range(len(self.test_words)):
-                result_detail += '%s. %s - %s \n' % (i + 1,  self.test_words[i], self.answer_words[i])
-        result_detail_dialog = wx.MessageDialog(None, result_detail, 'Result detail', style=wx.OK | wx.ICON_INFORMATION)
-        result_detail_dialog.ShowModal()
+                result_detail += '%s. %s - %s ' % (i + 1,  self.test_words[i], self.answer_words[i])
+                # result_detail_dialog = wx.MessageDialog(None, result_detail, 'Result detail', style=wx.OK | wx.ICON_INFORMATION)
+                # result_detail_dialog.ShowModal()
 
     def init_param(self):
         """
@@ -360,3 +376,35 @@ class TestDialog(wx.Dialog):
         play_closing_sound()
         self.timer.Destroy()
         self.Destroy()
+
+
+class Result(wx.Dialog):
+    def __init__(self, parent, answer_words, correct_words):
+        super(Result, self).__init__(parent, wx.ID_ANY, 'Test detail', size=(300, 300))
+        self.answer_words = answer_words
+        self.correct_words = correct_words
+        self.design_interface()
+        play_opening_sound()
+        self.ShowModal()
+        play_closing_sound()
+
+    def design_interface(self):
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        result_boxer = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, 'Result'), orient=wx.VERTICAL)
+        content_sizer = wx.BoxSizer(wx.VERTICAL)
+        content_text = wx.TextCtrl(self, wx.ID_ANY, '', style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2)
+        content_text.SetInsertionPoint(0)
+        for i in range(len(self.correct_words)):
+            content = '%s. %s - %s ' % (i + 1, self.correct_words[i], self.answer_words[i] or 'N/A')
+            colored_start_pos = len(content_text.GetLabel())
+            content_text.AppendText(content)
+            colored_end_pos = len(content_text.GetLabel())
+            if self.correct_words[i] == self.answer_words[i]:
+                content_text.SetStyle(colored_start_pos, colored_end_pos, wx.TextAttr("blue", "white"))
+            else:
+                content_text.SetStyle(colored_start_pos, colored_end_pos, wx.TextAttr("red", "white"))
+        content_sizer.Add(content_text, 1, wx.EXPAND | wx.ALL, 1)
+        result_boxer.Add(content_sizer, 1, wx.EXPAND | wx.ALL)
+        main_sizer.Add(result_boxer, 1, wx.EXPAND | wx.ALL)
+        self.SetSizer(main_sizer)

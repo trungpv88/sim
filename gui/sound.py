@@ -1,3 +1,13 @@
+#----------------------------------------------------------------------------
+# Change log:
+# 2015/01/16  - Version 1.1
+#----------------------------------------------------------------------------
+# Goal:
+# - Make sounds when a form is being closed or a button is being clicked
+
+"""
+These audio files are taken from some Yahoo Messenger 6 sounds (door, knock, doorbell, chimeup)
+"""
 import pygame
 import thread
 import os.path
