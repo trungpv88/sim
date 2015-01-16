@@ -212,8 +212,8 @@ class PhraseDialog(wx.Dialog):
 
         self.dataOlv.SetColumns([
             ColumnDefn('Date', 'left', 100, 'date'),
-            ColumnDefn('Phrase/Topic', 'left', 240, 'phrase'),
-            ColumnDefn('Meaning/Content', 'left', 240, 'meaning'),
+            ColumnDefn('Phrase/Topic', 'left', 230, 'phrase'),
+            ColumnDefn('Meaning/Content', 'left', 230, 'meaning'),
             ColumnDefn('', 'center', 20, 'music', imageGetter=sound_getter)
         ])
         self.dataOlv.SetObjects(self.view_phrases)

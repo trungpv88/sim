@@ -150,16 +150,13 @@ class LineChartDialog(wx.Dialog):
     Reference: http://zetcode.com/wxpython/gdi/
     """
     def __init__(self, parent, title, chart_title, data, x_range, y_range, x_cell, y_cell, days):
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(390, 350))
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, size=(400, 360))
         line_box = wx.BoxSizer(wx.VERTICAL)
         close_btn = wx.Button(self, -1, 'OK', size=(80, 25))
         close_btn.Bind(wx.EVT_BUTTON, self.on_close)
-        line_chart = LineChart(self, chart_title, data, x_range, y_range, x_cell, y_cell)
         total_word = self.count_total_word(data, y_cell)
-        total_word_lbl = wx.StaticText(self, wx.ID_ANY, "Total: %s words (%.4f w/d)"
-                                       % (total_word, (float(total_word) / days)), size=(200, 20))
+        line_chart = LineChart(self, chart_title, data, x_range, y_range, x_cell, y_cell, total_word, days)
         line_box.Add(line_chart, 1, wx.EXPAND | wx.ALL, 10)
-        line_box.Add(total_word_lbl, 0, wx.CENTER, 10)
         line_box.Add(close_btn, 0, wx.BOTTOM | wx.ALIGN_CENTER, 10)
         self.SetSizer(line_box)
         play_opening_sound()
@@ -179,7 +176,7 @@ class LineChartDialog(wx.Dialog):
 
 
 class LineChart(wx.Panel):
-    def __init__(self, parent, chart_title, data, x_range, y_range, x_cell, y_cell):
+    def __init__(self, parent, chart_title, data, x_range, y_range, x_cell, y_cell, total_words, nb_days):
         wx.Panel.__init__(self, parent)
         self.y_range = y_range
         self.x_range = x_range
@@ -187,6 +184,8 @@ class LineChart(wx.Panel):
         self.y_cell = y_cell
         self.chart_title = chart_title
         self.data = data
+        self.total_words = total_words
+        self.nb_days = nb_days
         self.days = tuple([str(d + 1) for d in range(x_range)])
         self.SetBackgroundColour('WHITE')
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -249,7 +248,8 @@ class LineChart(wx.Panel):
         font = dc.GetFont()
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
-        dc.DrawText('New words in ' + self.chart_title, 90, 235)
+        dc.DrawText('%s words in %s (%.4f w/d)' % (self.total_words, self.chart_title,
+                                                   float(self.total_words) / self.nb_days), 90, 235)
 
     def draw_data(self, dc):
         """
