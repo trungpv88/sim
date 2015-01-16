@@ -96,25 +96,20 @@ class MenuBar(object):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         info = wx.AboutDialogInfo()
         info.SetIcon(wx.Icon('icon/logo.png', wx.BITMAP_TYPE_PNG))
         info.SetName('Sim')
         info.SetVersion('1.1')
-        sim_description = """
-        An cross-platform application (support for Windows and Linux) help users learn vocabulary and manage
-        their foreign languages (english and french) learning period. Some information of a new entered words are
-        imported automatically from:
-        + google search (to get word pronunciation and description images)
-        + website: http://www.oxforddictionaries.com (to get word definition, pronunciation and line breaks)
-        Users can track their learning period with a word number line chart. For testing the memory, this application
-        provides a test functionality by listening some words then writing the answers. Moreover, it allow to take
-        note about learnt phrases/sentences in both languages with (if any)their pronunciation
-
+        sim_description = """ An cross-platform application (support for Windows and Linux) help users learn vocabulary
+        and manage their foreign languages (english and french) learning period. Some information of a new entered words
+        are imported automatically from:  google search (to get word pronunciation and description images) and website:
+        http://www.oxforddictionaries.com (to get word definition, pronunciation and line breaks). Users can track their
+        learning period with a word number line chart. For testing the memory, this application provides a test
+        functionality by listening some words then writing the answers. Moreover, it allow to save learnt phrases and
+        sentences in both languages with their pronunciation.
         SIM is developed in python 2.7 with some modules such as pygame, pydub (for sound), wxPython (version 2.8x
-        recommended) (for GUI), ffmpeg (dependency) ...
-
-        For the icons set, please find out more in: http://www.fatcow.com/
+        recommended) (for GUI), ffmpeg (dependency).. For the icons set, please find out more in: http://www.fatcow.com/
         Besides, some Yahoo Messenger 6.0 sounds are used for the closing and opening form or clicking button events."""
         sim_license = """
         Sim is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -128,7 +123,7 @@ class MenuBar(object):
         wx.AboutBox(info)
 
     def guide(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         HelpDialog(self.parent, 'Help')
 
 
