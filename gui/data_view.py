@@ -58,7 +58,7 @@ class MainPanel(wx.Panel):
         main_sizer.Add(self.dataOlv, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(main_sizer)
         self.view_data()
-        self.status_bar.update_word_nb(len(self.view_words))
+        self.status_bar.update_word_nb(len(self.word_definition))
 
     def new_panel(self):
         """
@@ -72,7 +72,7 @@ class MainPanel(wx.Panel):
         self.get_definition()
         self.view_words = []
         self.view_data()
-        self.status_bar.update_word_nb(len(self.view_words))
+        self.status_bar.update_word_nb(len(self.word_definition))
 
     @staticmethod
     def remove_audio_files():
@@ -148,14 +148,16 @@ class MainPanel(wx.Panel):
             if new_word not in self.word_definition.keys():
                 self.dict_db[0][new_word] = {}
                 # take definition from server using multi thread to increase speed
-                thread.start_new_thread(self.thread_word_definition, (new_word, w))
+                thread.start_new_thread(self.thread_add_new_data, (new_word, w))
             else:
                 msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
                 msg_box.ShowModal()
                 msg_box.Destroy()
-        self.set_columns()  # update 'sound' icon for new word displayed on overlay
+        # wait until add new data thread terminates
+        while self.is_running_thread:
+            self.status_bar.update_word_nb(len(self.word_definition))
 
-    def thread_word_definition(self, new_word, w):
+    def thread_add_new_data(self, new_word, w):
         """
         Create a thread to process the fetching definition word
         :param new_word:
@@ -168,12 +170,7 @@ class MainPanel(wx.Panel):
             return
         word_def = ''
         while word_def == '':
-            try:
-                word_def = w.get_definition()
-            except:
-                dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
-                dlg.ShowModal()
-                raise
+            word_def = w.get_definition()
             if word_def != '':
                 # save definition to database and get it to display on overlay
                 now = wx.DateTime.Now()
@@ -188,14 +185,18 @@ class MainPanel(wx.Panel):
                 self.dict_db[0][new_word]['audio'] = audio_str
                 self.db.save(self.dict_db)
                 # display definition on overlay
-                self.view_words.append(WordView(new_word, view_def, today,
-                                                saved_def[0].decode('utf-8'), saved_def[1].decode('utf-8')))
-                self.view_words.sort(key=lambda word: (word.date, word.value), reverse=True)
-                self.dataOlv.SetObjects(self.view_words)
-                self.status_bar.update_word_nb(len(self.view_words))
+                word_view = WordView(new_word, view_def, today, saved_def[0].decode('utf-8'),
+                                     saved_def[1].decode('utf-8'))
+                self.dataOlv.AddObject(word_view)
+                self.dataOlv.SortBy(0, False)
                 play_message_sound()
-            self.is_running_thread = False
-            thread.exit()
+            else:
+                # dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
+                # dlg.ShowModal()
+                print 'Can not find this word!'
+                break
+        self.is_running_thread = False
+        thread.exit()
 
     def set_columns(self):
         """
@@ -280,13 +281,13 @@ class MainPanel(wx.Panel):
         if selected_obj is not None:
             yes_no_box = wx.MessageDialog(None, 'Are you sure you want to delete this word?', 'Sim',  wx.YES_NO)
             if yes_no_box.ShowModal() == wx.ID_YES:
-                self.view_words = [w for w in self.view_words if w.value != selected_obj.value]
-                self.dataOlv.SetObjects(self.view_words)
                 del self.word_definition[selected_obj.value]
                 del self.dict_db[0][selected_obj.value]
                 self.db.save(self.dict_db)
+                self.dataOlv.RemoveObject(selected_obj)
+                self.dataOlv.SortBy(0, False)
                 # display word number on status bar
-                self.status_bar.update_word_nb(len(self.view_words))
+                self.status_bar.update_word_nb(len(self.word_definition))
                 play_buzz_sound()
             yes_no_box.Destroy()
 

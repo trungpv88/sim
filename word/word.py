@@ -35,10 +35,7 @@ class Word(object):
             response = urllib2.urlopen(self.def_url)
             self.parser.feed(response.read())
             response.close()
-        except IOError:
-            msg_dlg = wx.MessageDialog(None, "Can not find the definition of '" + self.word + "' on the server.", 'Sim',
-                                       style=wx.OK | wx.ICON_EXCLAMATION)
-            msg_dlg.ShowModal()
+        except urllib2.URLError:
             return ''
         return self.parser.data
 

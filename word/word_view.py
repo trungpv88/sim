@@ -200,7 +200,7 @@ class WordDisplay(wx.Dialog):
             self.dict_db[0][self.title]['image'] = self.images_saved
             self.db.save(self.dict_db)
             self.parent.update_db()
-            self.parent.set_columns()  # update image icon in list view
+            self.parent.dataOlv.RepopulateList()  # update image icon in list view
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_closing_sound()
         self.Destroy()

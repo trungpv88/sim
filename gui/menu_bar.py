@@ -43,11 +43,11 @@ class MenuBar(object):
         yes_no_msg_dlg.Destroy()
 
     def new(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         self.open_db(title='Would you like to save current data before open new database?', op_type='new')
 
     def open(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         self.open_db(title='Would you like to save current data before load a database?', op_type='load')
 
     @staticmethod
@@ -75,7 +75,7 @@ class MenuBar(object):
         file_name_box.Destroy()
 
     def save(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
+        print 'Clicked button: %s' % (e.GetEventObject())
         self.save_db()
 
     def quit(self, e):
@@ -87,7 +87,7 @@ class MenuBar(object):
         print 'Clicked button: %s' % (e.GetEventObject())
         yes_no_box = wx.MessageDialog(None, 'Are you sure you want to quit this application?', 'Sim',  wx.YES_NO)
         if yes_no_box.ShowModal() == wx.ID_YES:
-            self.parent.Close()
+            self.parent.Destroy()
 
     @staticmethod
     def about(e):
