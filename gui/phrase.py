@@ -432,6 +432,7 @@ class PhraseDialog(wx.Dialog):
         """
         if len(self.dict_db[self.db_index][self.lang_index][phrase]) > 2:
             audio_str = self.dict_db[self.db_index][self.lang_index][phrase][2]
+            phrase = unicodedata.normalize('NFKD', unicode(phrase)).encode('ascii', 'ignore')
             path = unicode(AUDIO_DIR + phrase + OGG_EXTENSION)
             if not os.path.exists(unicodedata.normalize('NFKD', path).encode('ascii', 'ignore')) \
                     and len(audio_str) > 0:
