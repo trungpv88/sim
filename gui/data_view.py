@@ -142,6 +142,8 @@ class MainPanel(wx.Panel):
         :return:
         """
         self.is_running_thread = True
+        current_word_number = len(self.word_definition)
+        has_new_word = False
         w = Word(value=new_word)
         # check whether new word exists or is blank
         if new_word != "":
@@ -150,12 +152,22 @@ class MainPanel(wx.Panel):
                 # take definition from server using multi thread to increase speed
                 thread.start_new_thread(self.thread_add_new_data, (new_word, w))
             else:
+                # self.is_running_thread = False
                 msg_box = wx.MessageDialog(None, 'This word exists!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
                 msg_box.ShowModal()
                 msg_box.Destroy()
+                return
         # wait until add new data thread terminates
         while self.is_running_thread:
+            # only update when a new word was added
+            if len(self.word_definition) != current_word_number:
+                has_new_word = True
+                break
+        if has_new_word:
             self.status_bar.update_word_nb(len(self.word_definition))
+        else:
+            dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
+            dlg.ShowModal()
 
     def thread_add_new_data(self, new_word, w):
         """
@@ -191,9 +203,6 @@ class MainPanel(wx.Panel):
                 self.dataOlv.SortBy(0, False)
                 play_message_sound()
             else:
-                # dlg = wx.MessageDialog(None, 'Can not find this word!', 'Sim', style=wx.OK | wx.ICON_EXCLAMATION)
-                # dlg.ShowModal()
-                print 'Can not find this word!'
                 break
         self.is_running_thread = False
         thread.exit()
