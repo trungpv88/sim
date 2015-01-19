@@ -17,6 +17,7 @@ class DefParser(SGMLParser):
     """
     def __init__(self, verbose=0):
         SGMLParser.__init__(self, verbose)
+        self.has_pronunciation = False
         self.div_nb = 0
         self.data = ""
         self.buffer = None
@@ -58,7 +59,9 @@ class DefParser(SGMLParser):
         :return:
         """
         div = [v for k, v in att if k == 'class' and v == 'headpron']
-        if div:
+        # get only one pronunciation (in some cases, there are many pronunciations)
+        if div and not self.has_pronunciation:
+            self.has_pronunciation = True
             self.buffer = ""
 
     def end_div(self):
