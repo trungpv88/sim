@@ -22,7 +22,7 @@ from ObjectListView import ObjectListView, ColumnDefn
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import *
 from dictionary.database import DataBase
-from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound
+from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound, thread_play
 
 
 class Phrase(object):
@@ -432,13 +432,13 @@ class PhraseDialog(wx.Dialog):
         """
         if len(self.dict_db[self.db_index][self.lang_index][phrase]) > 2:
             audio_str = self.dict_db[self.db_index][self.lang_index][phrase][2]
-            phrase = unicodedata.normalize('NFKD', unicode(phrase)).encode('ascii', 'ignore')
+            # insert prefix to avoid the confusion with another audio file
+            phrase = "p_" + unicodedata.normalize('NFKD', unicode(phrase)).encode('ascii', 'ignore')
             path = unicode(AUDIO_DIR + phrase + OGG_EXTENSION)
             if not os.path.exists(unicodedata.normalize('NFKD', path).encode('ascii', 'ignore')) \
                     and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
-            p = Word(phrase)
-            p.pronounce()
+            thread_play(path)
 
     def play_audio_file(self, e):
         """
