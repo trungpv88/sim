@@ -7,7 +7,7 @@
 # - Get word pronunciation and definition
 
 import urllib2
-import wx
+from pygame.base import error
 import os.path
 from definition import DefParser
 from pronunciation import Audio, AUDIO_DIR, DICT_URL, MP3_EXTENSION, OGG_EXTENSION, GG_SEARCH_URL
@@ -65,5 +65,8 @@ class Word(object):
         Pronounce the word
         :return:
         """
-        self.audio.init_mixer()
-        self.audio.play()
+        try:
+            self.audio.init_mixer()
+            self.audio.play()
+        except error:
+            print 'Please check audio device!'

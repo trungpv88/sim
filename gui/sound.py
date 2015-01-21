@@ -8,6 +8,7 @@
 """
 These audio files are taken from some Yahoo Messenger 6 sounds (door, knock, doorbell, chimeup)
 """
+from pygame.base import error
 import pygame
 import thread
 import os.path
@@ -46,9 +47,8 @@ def play(path):
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             clock.tick(1000)
-    except:
-        print "Can not play audio file"
-        raise
+    except error:
+        print 'Please check audio device'
 
 
 def get_mixer_args():
