@@ -225,7 +225,7 @@ class TestDialog(wx.Dialog):
         """
         for word, v in self.word_date.items():
             audio_str = self.dict_db[0][word].get('audio', '')
-            path = AUDIO_DIR + word + OGG_EXTENSION
+            path = unicode(AUDIO_DIR + word + OGG_EXTENSION)
             if not os.path.exists(path) and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
 
