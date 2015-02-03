@@ -256,7 +256,7 @@ class MainPanel(wx.Panel):
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             audio_str = self.dict_db[0][selected_obj.value].get('audio', '')
-            path = AUDIO_DIR + selected_obj.value + OGG_EXTENSION
+            path = unicode(AUDIO_DIR + selected_obj.value + OGG_EXTENSION)
             if not os.path.exists(path) and len(audio_str) > 0:
                 convert_string_to_ogg(audio_str, path)
             w = Word(selected_obj.value)
