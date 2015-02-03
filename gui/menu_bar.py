@@ -37,7 +37,7 @@ class MenuBar(object):
                                      wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
             if open_dlg.ShowModal() == wx.ID_OK:
                 db_name = ntpath.basename(open_dlg.GetPath())
-                shutil.copy(db_name, DB_PATH)
+                shutil.copy(open_dlg.GetPath(), DB_PATH)
             self.panel.new_panel()
             open_dlg.Destroy()
         yes_no_msg_dlg.Destroy()
