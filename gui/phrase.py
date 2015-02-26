@@ -5,6 +5,7 @@
 #             - Add and change the selected word/phrase/sentence pronunciation
 #             - Change learning language (English and French)
 #             - Play the pronunciation list at random
+# 2015/02/26  - Remove SingleDialog to change language or mode
 #----------------------------------------------------------------------------
 # Goal:
 # - Take note about learnt words/phrases/sentences
@@ -12,6 +13,7 @@
 # - Add and change the selected word/phrase/sentence pronunciation
 # - Change learning language (English and French)
 # - Play the pronunciation list at random
+
 
 import wx
 import random
