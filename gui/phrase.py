@@ -360,40 +360,16 @@ class PhraseDialog(wx.Dialog):
         Event raises when change language button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        choose_language = wx.SingleChoiceDialog(None, 'Choose your learning language:', 'Language',
-                                                ['English', 'French'])
-        play_opening_sound()
-        if choose_language.ShowModal() == wx.ID_OK:
-            lang = choose_language.GetStringSelection()
-            if lang == 'English':
-                lang_index = 0
-            else:
-                lang_index = 1
-            if self.lang_index != lang_index:
-                self.lang_index = lang_index
-                self.update_overlay()
-        play_closing_sound()
-        choose_language.Destroy()
+        self.lang_index = ~self.lang_index + 2
+        self.update_overlay()
 
     def change_mode(self, e):
         """
         Event raises when change mode button is clicked
         """
         print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
-        choose_mode = wx.SingleChoiceDialog(None, 'Choose your learning mode:', 'Mode',
-                                            ['Phrase', 'Topic'])
-        play_opening_sound()
-        if choose_mode.ShowModal() == wx.ID_OK:
-            mode = choose_mode.GetStringSelection()
-            if mode == 'Phrase':
-                mode_index = 1
-            else:
-                mode_index = 2
-            if self.db_index != mode_index:
-                self.db_index = mode_index
-                self.update_overlay()
-        play_closing_sound()
-        choose_mode.Destroy()
+        self.db_index = ~self.db_index + 4
+        self.update_overlay()
 
     def view_edit_content(self, e):
         """
