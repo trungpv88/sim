@@ -73,3 +73,12 @@ def init_mixer():
     except:
         print "Can not initialize parameters for audio module."
         raise
+
+
+def get_duration(path):
+    """
+    Get duration of an audio file given its path
+    :return:
+    """
+    a = pygame.mixer.Sound(path)
+    return a.get_length()

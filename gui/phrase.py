@@ -14,17 +14,18 @@
 # - Change learning language (English and French)
 # - Play the pronunciation list at random
 
+DELAY_TIME_INTERVAL = 3
 
 import wx
 import random
 import time
 import thread
-from word.word import Word
 from ObjectListView import ObjectListView, ColumnDefn
 from word.pronunciation import AUDIO_DIR, OGG_EXTENSION
 from utils import *
 from dictionary.database import DataBase
-from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound, thread_play
+from sound import play_closing_sound, play_message_sound, play_opening_sound, play_buzz_sound, thread_play, \
+    get_duration
 
 
 class Phrase(object):
@@ -458,7 +459,13 @@ class PhraseDialog(wx.Dialog):
         for audio in self.play_list:
             try:
                 self.pronounce(audio.phrase)
-                time.sleep(2)
+                path = unicode(AUDIO_DIR + "p_"
+                               + unicodedata.normalize('NFKD', unicode(audio.phrase)).encode('ascii', 'ignore')
+                               + OGG_EXTENSION)
+                print path
+                if os.path.exists(path):
+                    # wait some seconds before pronounce a new word
+                    time.sleep(get_duration(path) + DELAY_TIME_INTERVAL)
             except:
                 thread.exit()
                 raise
