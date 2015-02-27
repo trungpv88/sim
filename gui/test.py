@@ -245,7 +245,7 @@ class TestDialog(wx.Dialog):
         end_date = end_date.Format(DATE_FORMAT)
         # get words learnt from start_date to end_date
         self.test_words = [w for w, d in self.word_date.items() if end_date >= d >= start_date]
-        self.words_date_range.SetLabel('%s words (having audio)' % len(self.test_words))
+        self.words_date_range.SetLabel('%s audio-words' % len(self.test_words))
 
     def pronounce(self):
         """
