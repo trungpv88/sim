@@ -6,6 +6,7 @@
 #             - Change learning language (English and French)
 #             - Play the pronunciation list at random
 # 2015/02/26  - Remove SingleDialog to change language or mode
+# 2015/02/27  - Fix bug related to interval time between two speaking words in shuffling mode
 #----------------------------------------------------------------------------
 # Goal:
 # - Take note about learnt words/phrases/sentences
