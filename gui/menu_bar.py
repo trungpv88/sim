@@ -43,11 +43,9 @@ class MenuBar(object):
         yes_no_msg_dlg.Destroy()
 
     def new(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject())
         self.open_db(title='Would you like to save current data before open new database?', op_type='new')
 
     def open(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject())
         self.open_db(title='Would you like to save current data before load a database?', op_type='load')
 
     @staticmethod
@@ -75,7 +73,6 @@ class MenuBar(object):
         file_name_box.Destroy()
 
     def save(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject())
         self.save_db()
 
     def quit(self, e):
@@ -84,7 +81,6 @@ class MenuBar(object):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject())
         yes_no_box = wx.MessageDialog(None, 'Are you sure you want to quit this application?', 'Sim',  wx.YES_NO)
         if yes_no_box.ShowModal() == wx.ID_YES:
             self.parent.Destroy()
@@ -96,7 +92,6 @@ class MenuBar(object):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject())
         info = wx.AboutDialogInfo()
         info.SetIcon(wx.Icon('icon/logo.png', wx.BITMAP_TYPE_PNG))
         info.SetName('Sim')
@@ -123,7 +118,6 @@ class MenuBar(object):
         wx.AboutBox(info)
 
     def guide(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject())
         HelpDialog(self.parent, 'Help')
 
 
@@ -144,5 +138,4 @@ class HelpDialog(wx.Dialog):
         self.SetSizer(dialog_sizer)
 
     def on_close(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.Destroy()

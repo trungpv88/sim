@@ -56,5 +56,4 @@ class ServerDialog(wx.Dialog):
         return server_config_sizer
 
     def on_close(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.Destroy()

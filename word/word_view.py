@@ -130,7 +130,6 @@ class WordDisplay(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.is_changing_image = True
         self.images_saved = []
         # select images in 50 first result images from google search
@@ -201,7 +200,6 @@ class WordDisplay(wx.Dialog):
             self.db.save(self.dict_db)
             self.parent.update_db()
             self.parent.dataOlv.RepopulateList()  # update image icon in list view
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_closing_sound()
         self.Destroy()
 

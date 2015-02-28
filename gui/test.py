@@ -238,7 +238,6 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        # print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         start_date = self.start_date_picker.GetValue()
         start_date = start_date.Format(DATE_FORMAT)
         end_date = self.end_date_picker.GetValue()
@@ -311,7 +310,6 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject())
         # when all the test word is pronounced
         if self.current_word_pos >= len(self.test_words):
             self.finish_all_test()
@@ -329,7 +327,6 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.init_param()
         if len(self.test_words) == 0:
             self.play_btn.Enable()
@@ -342,7 +339,6 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         result_detail = 'Answer - Listen\n'
         # only show result when finishing test
         if len(self.answer_words) == len(self.test_words):
@@ -375,7 +371,6 @@ class TestDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_closing_sound()
         self.timer.Destroy()
         self.Destroy()

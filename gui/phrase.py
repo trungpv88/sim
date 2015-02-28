@@ -275,7 +275,6 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         phrase_box = wx.TextEntryDialog(None, 'Please enter a phrase/topic: ', 'Sim')
         new_item = ''
         print new_item  # remove warning
@@ -334,7 +333,6 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             yes_no_box = wx.MessageDialog(None, 'Are you sure you want to delete this phrase/topic?', 'Sim',  wx.YES_NO)
@@ -363,7 +361,6 @@ class PhraseDialog(wx.Dialog):
         """
         Event raises when change language button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.lang_index = ~self.lang_index + 2
         self.update_overlay()
 
@@ -371,7 +368,6 @@ class PhraseDialog(wx.Dialog):
         """
         Event raises when change mode button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.db_index = ~self.db_index + 4
         self.update_overlay()
 
@@ -381,7 +377,6 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             content_dlg = ContentDialog(self, selected_obj.phrase, selected_obj.meaning)
@@ -395,7 +390,6 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             open_dlg = wx.FileDialog(self.parent, 'Open audio file', '', '', 'mp3 files (*.mp3)|*.mp3',
@@ -435,7 +429,6 @@ class PhraseDialog(wx.Dialog):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         thread.start_new_thread(self.thread_play_audio_file, ())
 
     def thread_play_audio_file(self):
@@ -448,7 +441,6 @@ class PhraseDialog(wx.Dialog):
         Shuffle and play all audio
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.play_list = random.sample(self.view_phrases, len(self.view_phrases))
         thread.start_new_thread(self.thread_play_list, ())
 
@@ -473,7 +465,6 @@ class PhraseDialog(wx.Dialog):
         thread.exit()
 
     def on_close(self, e):
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_closing_sound()
         self.parent.panel.update_db()
         self.Destroy()

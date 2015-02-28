@@ -76,7 +76,6 @@ class StatusBar(wx.StatusBar):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         self.update_network_status()
 
     def update_word_nb(self, nb):

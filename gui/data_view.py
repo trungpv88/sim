@@ -239,7 +239,6 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         name_box = wx.TextEntryDialog(None, 'Please enter a new word: ', 'Sim', '')
         if name_box.ShowModal() == wx.ID_OK:
             new_word = name_box.GetValue().lower()
@@ -252,7 +251,6 @@ class MainPanel(wx.Panel):
         Event raises when play button is clicked
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             audio_str = self.dict_db[0][selected_obj.value].get('audio', '')
@@ -268,7 +266,6 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             word_line_breaks = self.word_definition[selected_obj.value][0]
@@ -287,7 +284,6 @@ class MainPanel(wx.Panel):
         :param e:
         :return:
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         selected_obj = self.dataOlv.GetSelectedObject()
         if selected_obj is not None:
             yes_no_box = wx.MessageDialog(None, 'Are you sure you want to delete this word?', 'Sim',  wx.YES_NO)

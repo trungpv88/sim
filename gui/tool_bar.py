@@ -24,7 +24,6 @@ class ToolBar(object):
         """
         Event raises when learning tracking button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_opening_sound()
         CalendarDialog(self.parent, 'Learning Tracking')
 
@@ -32,7 +31,6 @@ class ToolBar(object):
         """
         Event raises when test button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_opening_sound()
         TestDialog(self.parent, 'Test Vocabulary')
 
@@ -40,7 +38,6 @@ class ToolBar(object):
         """
         Event raises when when view phrases button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_opening_sound()
         PhraseDialog(self.parent, 'Ordinary Phrases/Topics')
 
@@ -48,6 +45,5 @@ class ToolBar(object):
         """
         Event raises when server configuration button is clicked
         """
-        print 'Clicked button: %s' % (e.GetEventObject().GetLabel())
         play_opening_sound()
         ServerDialog(self.parent, 'View Configuration Servers')
